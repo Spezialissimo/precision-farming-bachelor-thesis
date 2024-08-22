@@ -8,8 +8,8 @@
 
 \school{\unibo}
 \programme{Corso di Laurea Triennale in Ingegneria e Scienze Informatiche}
-\title{Fancy Title}
-\author{Candidate Name}
+\title{Prototipo di irrgazione prescrittivo}
+\author{Davide Speziali}
 \date{\today}
 \subject{Supervisor's course name}
 \supervisor{Prof. Supervisor Here}
@@ -24,6 +24,8 @@
 \acrodef{PWM}{pulse-width modulation}
 \acrodef{SBC}{Single Board Computer}
 \acrodef{JS}{JavaScript}
+\acrodef{UN}{United Nations}
+\acrodef{SDG}{Sustainable Development Goals}
 
 \mainlinespacing{1.241} % line spacing in mainmatter, comment to default (1)
 
@@ -66,16 +68,44 @@ they will be written in full only once
 \note{At the end, describe the structure of the paper}
 
 \chapter{Precision Watering}
-
+%
 %Introduce il lettore alla tesi, descrive il concetto di agricoltura di precisione, perché è nata (in termini di necessità), quali obbiettivi si pone e quali sono i maggiori limiti che sta incontrando; in allegato trovi la mia tesi magistrale, sentiti pure libero di usarlo come fonte, soprattutto il primo capitolo. Lunghezza 10-15 pagine
+%
+La risposta al cambiamento climatico sta diventando uno dei temi più importanti per il futuro delle popolazioni del pianeta (una bella fontazza cringe qua ci sta). Per questo motivo a partire dal 2015 le \ac{UN} hanno adottato l'agensa per lo sviluppo sostenibile 2030 (capire come è corretto citarlo) e i suoi 17 \ac{SDG}. 
+%
+Tra i 17 obiettivi compare anche \ac{SDG} 6 "Acqua pulita e sanificazione", l'obbiettivo è quello di garantire un accesso sicuro all'acqua a tutta la popolazione del mondo\cite{SDG-6}. Il target 6.4, in particolare punta ad un miglioramento dell'efficienza del l'uso di acqua in tutti i settori\cite{SDG-6.4.1}, tra cui soprattutto quello agricolo che utilizza il 70\% dell'acqua dolce ottenibile in natura\cite{Odorico-Chiarelli-2020}. 
+%
+Per questo motivo si è sviluppato l'interesse per lo sviluppo di tecnologie di monitoraggio dei terreni e lo sviluppo di modelli per l'irrigazione efficiente ed automatica. (cerca citazione di un aumento del precisio farming)
 
-L'argicultura è ricunosciuta come elemento fondamentale dello sviluppo della civiltà umana (fonte). L'agricultura è anche una delle industrie che più sfruttano le risorse idriche (fonte) il che contribuisce all'aumento delle temperature (fonte). Per poter affrontare la crisi climatica diventa necessario lo studio, sviluppo e utilizzo di tecnologie per limitare gli sprechi di acqua all'interno dell'agricultura, questo è l'obbiettivo del precision watering.
-
-La sezione 1.1 (capire come fare in latex) illustra qual è l'impatto climatico dell'agricultura per quel che concerne lo sfruttamento di acqua, la sezione 1.2 mostra quali possono essere i possibili approcci all'agricultura di precisioni e infinire la sezione 1.3 ragiona su quali sono i limiti degli approcci precedentemente elencati.
+La \cref{necessità e obbiettivi} illustra qual è l'impatto climatico dell'agricultura per quel che concerne lo sfruttamento di acqua, la sezione 1.2 elenca quali possono essere i modelli di simulazione del terreno e la loro importanza e infine la sezione 1.3 ragiona su quali sono i limiti degli approcci precedentemente elencati.
 
 \section{Necessità e obbiettivi}
+\label{necessità e obbiettivi}
+%c'è la possibilità che quello che scriverò qua sarà mergato nell'introduzione al capitolo
 
-riscaldamento globale, trova studi sullo spreco di acqua, trova studi in italia sulla siccità
+Gli effetti dell'utilizzo eccessivo di acqua
+
+Gli effetti del cambiamento climatico sull'agricoltura
+
+Situazione in italia
+
+Soluzione possibile con esempio della giordania.
+
+
+
+Citare che l'utilizzo eccessivo di acqua comporta a sua volta una perdità per l'agriculutra in termini di cambiamento climatico \cite{Cogato-Meggio-Migliorati-Marinello-2019}
+
+aggiungi lo sviluppo in aree con scarsa presenza di acqua come il giordano e lo sviluppo di soluzioni come il precision irrigation e il precision watering \cite{UN-Water-Accel-Jordan-24}.
+
+Cita la necessità di efficienza nell'uso dell'acqua da parte dell'UN \cite{UN-Water-Water-use-eff-21}.
+
+Cita l'indicatore del SDG e che cos'è \cite{SDG-6.4.1}
+
+Cita la non ottima posizione dell'italia \cite{SDG-6-Progress}
+
+Quantità di acqua usata per l'agricoltura quasi raddoppiata dal 1970 ed oggi l'agricultura rimane l'area dove l'utilizzo di acqua è il maggiore, circa tre volte rispetto quello delle industrie.\cite{FAO-acquastat-2020}
+
+trova studi in italia sulla siccità
 
 \section{Approcci}
 
@@ -159,8 +189,6 @@ Breve capitolo che trae le conclusioni sul lavoro svolto, il risultato ottenuto 
 %
 
 \backmatter
-
-\nocite{*} % Remove this as soon as you have the first citation
 
 \bibliographystyle{alpha}
 \bibliography{bibliography}
