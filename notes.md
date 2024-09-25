@@ -3,46 +3,67 @@
 L'utilizzo eccessivo di acqua ha portato ad un aumento della siccità(fonte), sono presenti diversi studi che dimostrano una dimunuizione del 30\% del raccolto di frutta e verdura negli stati uniti a causa della siccità mentre in altri casi effetti combinati di siccità e aumento di temperature ha portato ad una diminuzione sia della dimensione del raccolto che della quantità di fotosintesi per la pianta di grano \cite{Cogato-Meggio-Migliorati-Marinello-2019}.
 
 
-
+In risposta a queste sfide sono sorte nuove soluzioni che fanno uso di tecnologie avanzate con lo scopo di ridurre l'impatto ambientale e garantire una produzione agricola più sostenibile.
+L'agricoltura verticale, ad esempio, permette la coltivazione all'interno di contesti urbani, riducendo la dipendenza dal suolo tradizionale, e quindi anche le emissioni date dal trasporto, con l'impegno di ottimizzare l'utilizzo d'acqua e di sostanze necessarie alle piante. Altri esempi possono essere l'utilizzo di biofertilizzanti e l'agricoltura biologica, che mirano a ridurre l'utilizzo di sostanze chimiche dannose e a migliorare la qualità dei terreni agricoli.
 
 Scaletta attuale primo capitolo:
 
-Grazie per aver condiviso le tue fonti e appunti. Basandomi su questo materiale, ti suggerisco una struttura dettagliata per il capitolo introduttivo della tua tesi sull'agricoltura di precisione. Ho incluso una suddivisione in sezioni e sottosezioni, con l'indicazione delle fonti principali da utilizzare per ciascuna parte.
+# 1.1 - Introduzione generale all’agricoltura di precisione  (5 pagine)
++ Agricoltura e cambiamento climatico (1 pagina) -> **si può modificare e aggiungere cose volendo, al momento è in uno stato non maturissimo**
++ Parametri di coltivazione (2 pagine) -> *poggers*
++ Definizione di agricoltura di precisione (1 pagina) -> *poggers*
 
-## 1. **Introduzione generale all’agricoltura di precisione (2-3 pagine)**
+# 1.2 - Componenti chiave dell’agricoltura di precisione (5 pagine)
+    Tecniche di misurazione e/o derivazione dei parametri
+    Modelli di simulazione del terreno
+    Sistemi di supporto alle decisioni - nel caso, qui puoi introdurre un gancio per parlare di AI in agricoltura (prossima sezione)
 
-- **Definizione di agricoltura di precisione**
+# 1.3 - Esempi di tecnologie e metodi avanzati nell’agricoltura di precisione (3 pagine)
+    Monitoraggio (!) - il nostro sistema prescrittivo è frutto di due anni di ricerca, ma già un sistema accurato di monitoraggio è un prodotto molto valido (e non così scontato) in industria agro
+    Machine learning e intelligenza artificiale per la gestione dell'irrigazione
+    Sistemi di irrigazione di precisione
 
-- **Perché è nata l'agricoltura di precisione e obiettivi**
+# 1.4 - Limitazioni attuali dell’agricoltura di precisione (2-3 pagine)
+    Costi e accessibilità per i piccoli agricoltori
+    Sfide legate alla raccolta e gestione dei dati
 
-## 2. **Componenti chiave dell’agricoltura di precisione (4-5 pagine)**
+# chatgpt
 
-- **Parametri di coltivazione**
+### Definizione di agricoltura di precisione
 
-- **Tecniche di misurazione e/o derivazione dei parametri**
+L'**agricoltura di precisione** (o *precision farming*) è un sistema di gestione agricola basato sull'uso di tecnologie avanzate per monitorare e ottimizzare la produzione delle colture. Essa sfrutta strumenti digitali come sensori, droni, GPS, immagini satellitari e software di analisi dati per raccogliere informazioni dettagliate sulle condizioni del suolo, del clima e delle colture, consentendo decisioni mirate e precise in tempo reale. L'obiettivo principale è quello di gestire le risorse agricole in modo più efficiente, riducendo sprechi e migliorando la produttività.
 
-- **Modelli di simulazione del terreno**
+Grazie all'agricoltura di precisione, gli agricoltori possono applicare fertilizzanti, pesticidi, irrigazione e altre risorse solo dove e quando sono effettivamente necessari, anziché utilizzarli in modo uniforme su tutta l'area coltivata. Questo approccio consente una gestione più sostenibile e redditizia delle coltivazioni, contribuendo alla riduzione dell'impatto ambientale e migliorando la resa agricola.
 
-- **Sistemi di supporto alle decisioni**
+### Perché è nata l'agricoltura di precisione
 
-## 3. **Sfide globali e regionali affrontate dall’agricoltura di precisione (2-3 pagine)**
+L'agricoltura di precisione è nata per rispondere a diverse sfide e opportunità emerse negli ultimi decenni. Tra le cause principali troviamo:
 
-- **Cambiamenti climatici e impatto sull’agricoltura**
+1. **Crescente domanda alimentare**: Con l'aumento della popolazione mondiale, si è reso necessario incrementare la produttività agricola per soddisfare le crescenti esigenze alimentari, senza però espandere ulteriormente la superficie coltivata.
 
-- **Siccità e gestione delle risorse idriche**
+2. **Limitazione delle risorse naturali**: Risorse come l'acqua e il suolo fertile sono finite e sempre più soggette a stress ambientale. L'agricoltura di precisione è nata per ottimizzare l'uso di queste risorse, minimizzando gli sprechi.
 
-## 4. **Esempi di tecnologie e metodi avanzati nell’agricoltura di precisione (3-4 pagine)**
+3. **Cambiamenti climatici**: Eventi meteorologici estremi e variazioni climatiche hanno reso l'agricoltura più vulnerabile. L'adozione di tecnologie che permettono di adattarsi rapidamente alle condizioni climatiche variabili è diventata essenziale per garantire una produzione agricola stabile.
 
-- **Machine learning e intelligenza artificiale per la gestione dell'irrigazione**
+4. **Sostenibilità ambientale**: L'uso intensivo di fertilizzanti chimici e pesticidi ha portato a problemi di degrado del suolo, inquinamento delle falde acquifere e perdita di biodiversità. L'agricoltura di precisione consente di applicare trattamenti solo dove necessario, riducendo l'impatto ambientale.
 
-- **Sistemi di irrigazione di precisione**
+5. **Innovazione tecnologica**: Lo sviluppo di tecnologie digitali avanzate, come l'Internet of Things (IoT), l'intelligenza artificiale (AI) e il machine learning, ha aperto nuove possibilità per raccogliere e analizzare enormi quantità di dati agricoli in modo efficiente e in tempo reale.
 
-## 5. **Limitazioni attuali dell’agricoltura di precisione (2-3 pagine)**
+### Obiettivi dell'agricoltura di precisione
 
-- **Costi e accessibilità per i piccoli agricoltori**
+L'agricoltura di precisione ha diversi obiettivi che mirano a migliorare sia la produttività agricola che la sostenibilità ambientale:
 
-- **Sfide legate alla raccolta e gestione dei dati**
+1. **Ottimizzazione dell'uso delle risorse**: Ridurre al minimo l'impiego di acqua, fertilizzanti e pesticidi, applicandoli solo dove e quando sono necessari, in base alle specifiche condizioni del terreno e delle colture.
 
+2. **Aumento della produttività**: Migliorare la resa delle coltivazioni attraverso una gestione più precisa e mirata, sfruttando al meglio le condizioni favorevoli e intervenendo tempestivamente in caso di problematiche.
+
+3. **Riduzione degli sprechi e dei costi**: Minimizzare le perdite dovute a un uso eccessivo o inefficiente delle risorse, riducendo così i costi operativi per gli agricoltori.
+
+4. **Miglioramento della sostenibilità**: Promuovere pratiche agricole che riducano l'impatto ambientale, preservino la fertilità del suolo, riducano l'inquinamento e contribuiscano alla mitigazione dei cambiamenti climatici.
+
+5. **Aumento della redditività**: Ottimizzando i processi agricoli, l'agricoltura di precisione permette agli agricoltori di aumentare i profitti riducendo i costi e migliorando l'efficienza complessiva.
+
+In sintesi, l'agricoltura di precisione nasce per affrontare le sfide del futuro, combinando tecnologia e agronomia per creare un sistema agricolo più efficiente, sostenibile e resiliente.
 
 # A conceptual model of the soil water retention curve [33]
 
