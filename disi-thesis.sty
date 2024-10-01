@@ -1,5 +1,5 @@
 \usepackage[english, italian]{babel}
-\usepackage{hyperref}
+\usepackage[plainpages=false]{hyperref}
 \usepackage{graphicx}
 \usepackage{amssymb,amsmath}
 \usepackage[italian]{cleveref}
@@ -47,7 +47,7 @@
 }{}
 
 
-\newenvironment{acknowledgements}{\chapter*{\acknowledgementsname}}{} 
+\newenvironment{acknowledgements}{\chapter*{\acknowledgementsname}}{}
 \newenvironment{dedication}{\chapter*{}\begin{flushright}\itshape}{\normalfont\end{flushright}}
 \newenvironment{inlinelist}{\begin{enumerate*}[label=\emph{(\roman{*})}]}{\end{enumerate*}}
 
@@ -78,7 +78,7 @@
         \\
         \noindent\hrulefill
         \vspace{0.4cm}
-        
+
         \Large
         \theprogramme
 
@@ -87,7 +87,7 @@
         \textbf{
             \thetitle
         }
-        
+
         \large
         \vspace{1cm}
         Tesi di laurea in:
@@ -98,20 +98,20 @@
         %
         \begin{minipage}[t]{0.64\textwidth}
             \begin{flushleft}
-                \textit{Relatore} 
-                \\ 
+                \textit{Relatore}
+                \\
                 \textbf{\thesupervisor}
                 \\
                 \vspace{0.4cm}
                 \ifdefined\thecosupervisor
                 \ifdefined\themorecosupervisor
-                \textit{Correlatori} 
+                \textit{Correlatori}
                 \\
                 \textbf{\thecosupervisor}
                 \\
                 \textbf{\themorecosupervisor}
                 \else
-                \textit{Correlatore} 
+                \textit{Correlatore}
                 \\
                 \textbf{\thecosupervisor}
                 \fi
@@ -121,18 +121,18 @@
         %
         \begin{minipage}[t]{0.34\textwidth}
             \begin{flushright}
-                \textit{Candidato} 
-                \\ 
+                \textit{Candidato}
+                \\
                 \textbf{\theauthor}
             \end{flushright}
         \end{minipage}
         \\
-        
+
         \vfill
         \noindent\hrulefill
         \vspace{0.3cm}
         \Large
-        
+
         \thesession{} Sessione di Laurea
         \\
         Anno Accademico \theacademicyear
