@@ -205,3 +205,271 @@ Stessa cosa della mia tesi, più sensori danno una sezione verticale del terreno
 # PROGETTAZIONE DI UN SISTEMA DI OTTIMIZZAZIONE PER IL CONSIGLIO IRRIGUO
 
 Dimostra l'efficacia di un sistema PID con matrice di costo, per culture non presenti in DSAAT.
+
+
+# paper del brother
+
+The most trivial approaches to smart irrigation are threshold-based systems, in which irrigation is performed whenever measured soil moisture level falls beyond a fixed threshold.
+Despite being straightforward, such approaches are mostly effective in highly controlled environments, where few uncontrolled variables exist. Their primary limitation lies in their inability to determine the ideal volume of water required at each decision-making point.
+Control theory based systems are designed to govern highly dynamical  environments in order to achieve specific objectives. Various control theory based approaches are documented in literature, ranging from basic proportional derivative controllers (PID) [11] to more advanced model predictive controllers (MPC) [12].
+Controllers excel in enhancing the stability, accuracy, and reliability of managed systems, while facing challenges in modelling non Single Input Single Output (SISO) systems [13], making their implementations in open field challenging due to the multitude of uncontrollable variables driving the decision making process, such as crop phenology and pedological soil characteristics.
+With respect to learning approaches, the number of scientific publications in agricultural domain has been exponentially growing over the past decade [14], leveraging the spread of IoT devices to collect large quantities of data through which train machine learning models: from classification [15], to regression [16], to more complex systems involving neural networks [17] and deep reinforcement learning [18].
+The primary challenges associated with these approaches include the substantial requirement of large amount of high-quality data needed to train the models, as well as the ease with which a model can overfit a specific scenario due to specific values of certain environmental variables that heavily influence sensors’ measurements, such as soil texture and ridge tillage. Although this issue could be mitigated by training models on data from heterogeneous scenarios, it further highlights the generalization problem that learning models face by necessitating a greater variety of high-quality data.
+This indicates that a model performing well on a particular crop at a specific growth stage, cultivated on a field with distinct pedological characteristics might perform poorly when applied in a different scenario. This also entails a cold start problem: due to their limited generalization capabilities, learning models must first be trained on data specific to a scenario before they can effectively be deployed in it. Additionally, it is important to consider that real-world data can only be collected during irrigation seasons, which usually span from June to October in Italy, further complicating the development and validation of robust learning models.
+Ultimately, the authors in [19] emphasize the need of conducting practical, on-field case studies rather than relying solely on research performed in simulated or controlled environments (e.g. greenhouses), arguing that results derived from such controlled environments frequently fail to be relevant or transferable to other contexts beyond those specifically described in the studies.
+
+Accurately determining the irrigation needs of a plant is a non trivial task.
+As it advances through its growth stages, a plant’s water requirements change significantly. Furthermore, the volume of water necessary to fulfill these different demands is heavily dependent on the soil’s retention capacity, which is in turn influenced by a large number of variables such as texture, granularity,stratification, and so on. The presence of a groundwater table equally plays a crucial role in this context, as it not only serves as an additional water sourcebut also guides the preferential development of the plant’s root system.
+One could endlessly extend this list of variables affecting the decision-making process (e.g., weather conditions, ridge tillages, etc.) but doing so would merely amplify the complexity of the problem we want to solve.
+Starting from this, we have identified a set of requirements that a smart irrigation system must adhere to in order to achieve optimal results.
+
+(i) General purpose
+While expert agronomists have empirically learned through years of studies and practical experience to weight the aforementioned variables accordingly to effectively manage the irrigation requirements of different orchards, being able to embed such an almost non-deterministic knowledge into an automated system with the goal of enhancing the decision making process is an immensely challenging goal.
+A valuable smart irrigation system should be able to achieve optimal results within different crops and soils.
+(ii) Stability
+Smart irrigation systems must demonstrate consistent and reliable performance throughout the entire irrigation period, maintaining soil moisture levels as close as possible to the desired target. Stability in such systems is crucial to avoid fluctuations that could lead to bad conditions for plant growth. A system lacking stability is exposed to the risk of subjecting plants to unintended water stress, which can negatively impact both plant health and yield.
+(iii) Responsiveness
+Regardless of how stable a system may be, it will inevitably encounter uncontrollable events that will profoundly alter its stability: these events range from disruptive events (e.g. network failures, extreme weather conditions, power outages, etc.), to non-disruptive events that might still substantially alter the state of the system (e.g. heavy rain, fertigation, irrigation system malfunctions, etc.). In such cases, the system must be capable of rapidly adapt and recover to its stable state.
+(iv) Robustness
+When it comes to IoT devices, malfunctions or degradation over time happens on a daily basis. While such conditions are inevitable, they must be carefully considered in system design. For instance, relying on a single sensor to measure irrigation amounts poses significant threats: if the sensor fails, the system might lose critical data on the most recent watering, potentially leading to miscalculations.
+Similarly, sensor readings could be erroneous due to malfunctions exactly when irrigation decisions are being made.
+These challenges necessitate careful consideration in the design of smart irrigation systems, incorporating sensor redundancy and automated procedures for detection and possible mitigation strategies for such anomalies.
+(v) Simplicity
+As a corollary to the previous points, a fundamental principle in the design of smart irrigation systems is simplicity. While it is tempting to incorporate numerous variables and complex algorithms in pursuit of precision, such complexity can often lead to diminishing returns.
+Firstly, certain variables can only be accurately measured through laboratory analysis or the use of highly expensive equipment, making their use impractical in large-scale scenarios.
+Moreover, it is important to acknowledge that as we introduce more information into a system, we also tend to increase its entropy, not necessarily leading to enhanced results. Simplicity in design is essential not only for facilitating the implementation, tuning and maintenance of the system but also for enhancing its overall reliability and transparency.
+
+
+## paper pluto
+
+The monitoring of soil moisture has been proven beneficial in many various applications. For instance, Bordoni et al. (Bordoni et al., 2018) estimate the soil moisture on a test slope of Oltrep´o Pavese (northern Italy) for the assessment of shallow landslides triggering.
+Besides, agriculture has witnessed different analyses based on the adopted watering techniques. Among them, the investigation of the water demand of a mature citrus orchard to optimize the water budget during rainy and dry seasons in southern China (Tu et al., 2021). In the field of flood irrigation, Hamilton et al. (Hamilton et al., 2020) collect soil moisture measurements and compare three contrasting soil management treatments, discovering how to improve efficiency.
+In the following, we consider only papers related to precision farming, where it is important to have measurements as fine-grained as possible.
+The most common practice is to observe the change in soil moisture with the aid of sensors. According to the displacement, sensors can be categorized as proximal or remote. Proximal sensors are typically installed below the ground to monitor soil moisture in the plant rootzone, offering precise measurements. Conversely, remote sensors (e.g., Unmanned Aerial Systems) have been used for the discovery of global soil moisture patterns, due to their coarse spatial resolutions.
+Babaeian et al. (Babaeian et al., 2021) integrate both technologies to conduct analyses on global soil moisture patterns as well as near the plant. Yet, commercial precision farming installations encompass only the use of proximal sensors, as including both sensor types is not worth the cost.
+Furthermore, depending on the operating principle, proximal sensors measure either the volumetric water content (i.e., the volume of liquid water per volume of soil) or the soil water potential (i.e., the energy required by tree roots to extract water from soil particles).
+Proximal sensors installations can be categorized into single-sensor and multi-sensor installations. As the name suggests, the single sensor installation (0D) provides a punctual measurement of soil moisture.
+Although this installation (Arif et al., 2013) is cheap, it cannot monitor the soil moisture at different depths. To do so, multi-sensor installations are devised (e.g., ground-based proximal sensors are organized so that a grid is formed). According to the layout, we distinguish: monodimensional (1D), bi-dimensional (2D), and three-dimensional (3D) grids.
+The most popular configuration is the mono-dimensional grid (Karandish and ˇSimunek, 2016; Goldstein et al., 2018; Jim´enez et al., 2020; Pan et al., 2021; Li et al., 2015), where the sensors are vertically aligned at different depths. Bi-dimensional (Egea et al., 2016; Cordeiro et al., 2016) and three-dimensional (Zapata-Sierra et al., 2021; Liang et al., 2021) grids are quite less used due to the higher required number of sensors. Yet, they allow monitoring soil moisture changes not only at different depths but also along the other axes. Bi-dimensional grids involve installations of multiple sensors per soil layer, forming thus a matrix that enables the understanding of patterns in an entire slice of soil. While, three-dimensional grids can be seen as more bi-dimensional grids side by side, allowing the examination of more than one slice. An exhaustive dissertation about sensors and data collection can be found in (Vitali et al., 2021).
+
+3. Related Literature
+
+Raw sensory data are only the starting point for extracting richer representations of soil moisture. We review the literature of approaches that have been proposed to create such representations. We distinguish the following techniques.
++ Physically-based numerical models (e.g., HYDRUS (ˇSimunek et al., 2008), CRITERIA (Bittelli et al., 2011)) are analytical models that code the physical laws determining the hydrological dynamics.
++ Machine learning models leverage artificial intelligence techniques to learn hydrological dynamics from a large set of examples. Also, we distinguish the following goals.
++ Simulation estimates the soil dynamics over time with the aim of understanding the soil behavior under specific circumstances. Simulation is not bound to actual weather and soil moisture values,but rather tests different scenarios to understand the overall soil behavior.
++ Forecasting, starting from the current moisture values in a specific field, estimates its future values in order to let the user take appropriate decisions (e.g., watering).
++ Profiling estimates a fine-grained soil representation combining a coarse description of the moisture in the soil with statistical as sumptions and the knowledge of soil characteristics.
+
+Although the boundaries between these three goals are blurred, we can easily differentiate them considering that, while forecasting and simulation produce estimations of future moisture values, profiling produces a more detailed estimate of present values.
+Physically-based numerical models have been for a long time the only choice to study hydrological dynamics, and thus are considered well-accepted and solid tools.
+Machine learning models in the field of precision agriculture are relatively new in comparison to physically-based numerical models.
+Results assess the efficacy of the former, which additionally benefit of some advantages, above all low resources consumption: no on-line heavy computation is required and the result is rapidly available.
+With respect to PLUTO, Hinnell et al. (i) produce a statistical representation of the patterns that is based on a single dripper and assume a uniform characterization of the soil, (ii) derive the wetting patterns from generic soil parameters and not from actual sensor values.
+
+# tesi del brother
+
+L’evoluzione del settore agricolo segue quella tecnologica: il concetto di “agricoltura di precisione”, nato alla fine degli anni ’90 [51, 52, 53], è stato consolidato nel tempo e progressivamente evoluto fino alla definizione di “agricoltura 4.0”, in cui la tecnologia e in particolare il concetto di dato sono parte integrante del processo e sulla base dei quali è possibile espandere il dominio di conoscenza [54] e offrire supporto nel processo decisionale. In questo spazio temporale numerose soluzioni sono state proposte in risposta al problema di un’irrigazione “intelligente”, che possa concentrare e fondere le conoscenze umane con le conoscenze estraibili tramite approcci data-driven.
+Come evidenziato in Sezione 1.2 contesti diversi necessitano soluzioni diverse; in termini di irrigazione efficiente, una distinzione tra i numerosi approcci può essere effettuata sulla base della complessità della strategia adottata per determinare il consiglio irriguo.
+Proporzionalmente all’aumentare di complessità della tecnica di previsione utilizzata si distinguono quattro principali categorie di approcci: basati su controllori/soglie (descritti in Sezione 2.1), basati su tecniche di apprendimento automatico Sezione 2.2.
+
+2.1 Sistemi basati su teoria dei controlli
+
+In ottica di una classificazione degli approcci basata sulla complessità della tecnica utilizzata nella previsione del consiglio irriguo i primi sistemi identificabili sono basati su una soglia di umidità del terreno al di sotto della quale è necessaria irrigazione, come proposto dagli autori di [55, 56, 57]: si tratta di sistemi particolarmente semplici dal punto di vista realizzativo e in grado di ottenere buoni risultati in contesti piccoli ed estremamente controllati, nei quali il numero di variabili è ridotto.
+Alla stessa categoria appartengono i tentativi di automazione del processo d’irrigazione attraverso l’utilizzo di controlli automatici [58], con particolare riferimento all’utilizzo di controllori di tipo proporzionale-integrale-derivativo (PID) [59], soluzione già ampiamente diffusa in altri ambiti.
+
+**related works**
+> In [60], gli autori presentano un progetto accademico in cui viene testato l’utilizzo di un PID per minimizzare la differenza tra l’umidità del terreno e un valore ottimale definito a priori. Tra i principali limiti di questo approccio la fase di tuning dei parametri del controllore risulta particolarmente complessa a causa della difficoltà di questo nel modellare processi non di tipo Single Input Single Output [61]. A tal proposito, [62] propone un sistema decisionale basato su un PID “modificato” che permette di modellare, oltre all’umidità del terreno in input, le precipitazioni cadute. In teoria dei controlli sono state proposte alternative simili ai PID ma dotate di maggiore espressività e in grado di modellare meglio la complessità del fenomeno: [63] propone l’utilizzo di un Model Predictive Control (MPC) [64], controllore di tipo predittivo che nel caso in esame permette un risparmio nel quantitativo d’acqua utilizzato pur correttamente mantenendo l’umidità all’interno di un intervallo ideale.
+
+2.2 Sistemi basati su apprendimento automatico
+2.2.1 Machine Learning
+Negli ultimi dieci anni si è diffuso ed ha infine prevalso l’utilizzo di tecniche di machine learning [65], disciplina branca dell’intelligenza artificiale che permette la costruzione di modelli in grado di estrapolare informazioni e conoscenza da un insieme di dati in input attraverso un processo di apprendimento automatico.
+La peculiarità dei modelli di machine learning è quella di essere in grado di modellare e apprendere in contesti multivariati, cercando di predire la quantità ottima d’acqua da irrigare sulla base delle scelte passate. Buona parte delle soluzioni proposte sfruttano un learning di tipo supervisonato [66], in cui, nel contesto di studio, i modelli vengono addestrati tramite dati storici della coltura in esame e della relativa irrigazione.
+
+**related works**
+> Gli autori di [44, 67] confrontano i risultati ottenuti dall’utilizzo di tecniche di classificazione [68] e tecniche di regressione [66]; al contrario gli autori di [69] fanno riferimento solamente all’utilizzo di regressori , considerati più adatti visto il range continuo dell’output da determinare; [69] enfatizza inoltre la vitale importanza di una corretta modellazione e parametrizzazione del suolo. [70] propone un approccio in cui la quantit‘a d’acqua da irrigare viene calcolata attraverso un modello matematico frutto di precedenti studi [71] mentre tecniche di machine learning supervisionato vengono utilizzate per predire la migliore fascia oraria in cui irrigare. Gli autori di [42] propongono un esempio di applicazione di un sistema di irrigazione intelligente su vasta scala utilizzando un Gaussian Process Regression Model [72] per predire la quantità d’acqua. [43] descrive un complesso sistema di supporto decisionale in cui una serie di sensori/attuatori sono collegati tramite una rete attraverso la quale i dati, opportunamente elaborati e visualizzati, vengono messi a disposizione dell’agricoltore attraverso piattaforme web. Oltre all’utilizzo di un regressore condiviso con altre proposte precedentemente citate, propone l’utilizzo di un Adaptive Network-Based Fuzzy Inference System (ANFIS) [73].
+
+2.2.2 Reti neurali
+Infine, la progressiva diffusione delle reti neurali ha portato alla progettazione di una serie di sistemi che sfruttano queste per determinare l’irrigazione giornaliera.
+
+**related works**
+> In [74] viene proposto l’utilizzo di una Feed Forward Neural Network il cui training è ottimizzato dall’utilizzo di un algoritmo genetico [75]. [76] propone l’utilizzo di una Long-Short-Term-Memory (LSTM) [77] per predire la quantità d’acqua contenuta nel suolo il giorno successivo a quello in esame. La differenza tra la quantità d’acqua contenuta nel suolo tra i due giorni definisce la quantità d’acqua con cui irrigare il campo. Caratteristica principale di una LSTM è la capacità di tenere traccia dell’esperienza passata e utilizzare tale concetto di memoria per migliorare le decisioni future. [76] sfrutta inoltre una procedura di Maximum-Likelihood per classificare la tipologia di terreno in cui il sistema è operante. Similmente [78] propone un complesso sistema decisionale composto da una rete di sensori/attuatori e una LSTM addestrata a predirre il deficit d’acqua per il giorno successivo. Tale soluzione descrive anche una fase di validazione su campo in cui è possibile notare un risparmio notevole nel quantitativo d’acqua utilizzato per l’irrigazione rispetto a sistemi basati su soglia o su coefficente di evapotraspirazione. [79] propone infine l’utilizzo di una Bidirectional Long-Short-Term-Memory (BLSTM), rete neurale in grado di modellare input rappresentanti condizioni future, che nel caso specifico corrispondono alle precipitazioni attese per il giorno successivo a quello in esame. In [80] gli autori propongono una soluzione alla necessità, tipica di approcci basati su reti neurali, di avere a disposizione un dataset di dimensioni cospicue su cui addestrare la rete: utilizza un framework bayesiano e un algoritmo genetico per addestrare una Multilayer Perceptron (MLP) [81] che permette di predire la quantità d’acqua giornaliera da irrigare in contesti in cui la disponibilità di dati non è elevata.
+
+2.2.3 Reinforcement learning
+Le ultime proposte in ordine temporale riguardano l’utilizzo di tecniche di Reinforcement Learning (RL) [82], tipologia di apprendimento distinta sia da quello supervisionato che non; tenta di emulare l’apprendimento del cervello umano tramite l’interazione di un agente con un ambiente circostante, il quale cambia il suo stato e restituisce un premio/penalità rappresentante la bontà di ogni azione compiuta dall’agente. Rappresenta un approccio differente dai precedenti risultando più robusto, espressivo e in grado di fornire, in un contesto ideale, una soluzione più generalizzata. Tramite RL è possibile esplorare ed apprendere situazioni per le quali il sistema non è stato addestrato, costruisce un concetto di esperienza nel corso del tempo che permette all’agente di migliorare la propria strategia. Tali capacità sono ottenute attraverso un processo di addestramento lento, computazionalmente oneroso e necessitante di una grande mole di dati su cui potersi addestrare, caratteristiche che fanno spesso propendere verso soluzioni alternative, più semplici e meno gravose. L’apprendimento necessita di essere codificato attraverso una funzione di guadagno. Obbiettivo dell’agente è massimizzare il guadagno a lungo termine, per questo motivo soluzioni che adottano tecniche di RL spesso prendono in considerazione la massimizzazione del raccolto a fine anno, la massimizzazione del guadagno o la minimizzazione della quantità d’acqua utilizzata per irrigare.
+[83] descrive il caso di studio di un modello Deep Reinforcement Learning applicato in un campo di pomodori in Portogallo, il cui obbiettivo è quello di massimizzare il guadagno dato dalla quantità di pomodori venduti rapportato alla quantità d’acqua utilizzata per la coltura; similmente [84] definisce la funzione di guadagno come direttamente proporzionale alla resa attesa e inversamente proporzionale alla quantità d’acqua irrigata. [27] restituisce un guadagno positivo se l’irrigazione ha mantenuto l’umidità del terreno all’interno di un intervallo ottimo, negativo in caso contrario. Lo stesso studio introduce inoltre un meccanismo di sicurezza che possa prevenire, soprattutto nel primo periodo di operatività in cui sistemi RL sono maggiormente proni a errori a causa della poca esperienza, l’irrigazione insufficiente o eccessiva in modo da prevenire conseguenze dannose per la coltura. [85] rappresenta un lavoro molto recente che sfrutta una rete Double Deep Q-Network (DDQN) introducendo nella funzione di guadagno l’utilizzo di fertilizzanti rapportato
+al loro costo. Gli autori di [20, 86] descrivono infine lo stato dell’arte in termini di sistemi di irrigazione intelligente.
+
+La procedura di irrigazione di una coltura ha come obbiettivo ultimo fornirle sufficiente alimentazione per poterne garantire una crescita in salute che, nel caso dell’agricoltura, si può tradurre in massimizzarne resa e/o qualità del prodotto.
+Si tratta di un processo iterabile nel corso del ciclo di vita di una coltura con frequenza variabile sulla base delle necessità della stessa.
+All’interno del Capitolo 2 sono state descritte alcune delle numerose soluzioni proposte in letteratura al problema della previsione del consiglio irriguo di una coltura.
+In questo caso di studio l’esplorazione di tecniche di machine learning, reti neurali o reinforcement learning non è stata possibile a causa della necessità di queste tecniche di avere a disposizione una quantità di dati maggiore di quella effettivamente disponibile.
+*related works, lati negativi machine learning*
+>Come termine di paragone, sebbene gli autori di [80] propongano un modello di predizione basato su reti neurali applicabile in contesti in cui la quantità di dati a disposizione è limitata, la procedura di addestramento di tale modello utilizza dati storici inerenti due anni solari di coltivazione, quantità superiore a quella disponbile allo stato attuale del caso di studio. Il problema nella determinazione del consiglio irriguo è rappresentato dalla determinazione della frequenza e quantità (Irrq) d’acqua con cui irrigare. In letteratura è possibile trovare esempi che considerano frequenze d’irrigazione diverse: oltre ai più comuni approcci a frequenza giornaliera [27, 78, 80] gli autori di [83] propongono un modello per il calcolo di un consiglio irriguo della durata di quattro giorni mentre [43] modella il problema con granularità settimanale; questo lavoro considera un modello ad irrigazione giornaliera.
+
+Come supportato dalle proposte evidenziate in Sezione 2.2.3, è possibile descrivere il processo decisionale per la determinazione del consiglio irriguo attraverso un processo decisionale di Markov [102] che, nel contesto di studio in esame, assume il suolo come un ambiente stocastico in cui lo stato futuro di questo (i.e. la quantità d’acqua al suo interno) dipende solamente dallo stato attuale e dalla relativa azione compiuta in tale stato (i.e. irrigazione). è possibile dunque, seguendo il modello markoviano, scomporre il problema della determinazione del consiglio irriguo in un problema a granularità giornaliera in cui lo stato futuro del suolo dipende solamente dallo stato corrente e dalla relativa azione compiuta.
+
+4.1 Approcci ideali
+La definizione “approcci ideali” racchiude una categoria di approcci che assumono la correttezza dei modelli di parametrizzazione dei fenomeni naturali e del processo di simulazione. Si basano sull’assunzione che i fenomeni coinvolti nel processo di sviluppo di una coltura siano intrinsecamente deterministici.
+
+4.1.1 Et0
+Questo approccio consiste nell’effettuare una previsione della quantità d’acqua perduta dal terreno tramite evaporazione e traspirazione il giorno successivo a quello in esame. Il consiglio irriguo giornaliero è rappresentato dalla stima tramite Et0 della quantità d’acqua perduta.
+
+Irrq = Et0 (4.1)
+
+In un ambiente ideale con stato ottimo del suolo, questo approccio permette di mantenere un corretto bilancio idrico dell’ecosistema.
+I principali limiti di questo approccio derivano dalla natura semplificativa di Et0: come definito in Sezione 1.2.2, considerare la traspirazione associata a un tappeto erboso introduce un’approssimazione nel calcolo della traspirazione per colture diverse da quella di riferimento. Allo stesso modo, la nozione di previsione atmosferica introduce incertezza nella stima della quantità d’acqua evaporata. Più in generale, l’insieme di approssimazioni introdotte nel calcolo dell’evapotraspirazione potenziale di riferimento rendono difficoltoso un utilizzo pratico generalizzato.
+
+4.1.2 Formula
+Questo approccio introduce il concetto di stato “ottimo” del terreno: la quantità d’acqua d’acqua ideale che dovrebbe essere contenuta all’interno del suolo (W C∗). L’obbiettivo è determinare per ogni stato attuale (W Ct) il consiglio irriguo per cui lo stato successivo (W Ct+1) in cui si troverà il suolo sarà quello ottimo.
+
+W Ct+1 = W Ct − Et0 (4.2)
+W C∗ = W Ct − Et0 + Irrq (4.3)
+Irrq = W C∗ − W Ct + Et0 (4.4)
+
+Come descritto in Equazione (4.2), all’interno di un’ecosistema deterministico e accurato, è possibile esprimere relazioni esatte tra i fenomeni che ne influenzano lo stato. Assumendo assenza di precipitazioni e che il valore di evapotraspirazione potenziale sia rappresentativo della quantità d’acqua perduta da un suolo in un giorno, è possibile definire lo stato di domani come la quantità d’acqua presente nel suolo oggi alla quale viene sottratta la quantità perduta tramite evaporazione e traspirazione.
+Scopo della procedura d’irrigazione è fornire una quantità d’acqua tale per cui lo stato successivo a quello in esame è lo stato ottimo (Equazione (4.3)). Dato infine uno stato attuale W Ct ed uno stato ottimo W C∗ è possibile derminare il consiglio irriguo ideale per raggiungere lo stato ottimo come mostrato in Equazione (4.4).
+
+4.2 Approcci ponderati
+4.2.1 Delta
+Contrariamente agli approcci descritti in Sezione 4.1, l’approccio qui proposto cerca di modellare le approssimazioni introdotte nella parametrizzazione dei fenomeni analizzati. L’idea alla base di questa soluzione è cercare di modellare l’errore commesso nella stima di Et0.
+
+Irrq = Et0 ± δ (4.5)
+
+L’ Equazione (4.5) mostra lo stesso approccio definito in Sezione 4.1.1 ponderato di un’azione correttiva δ, il cui valore viene aggiornato precedentemente ogni singola irrigazione. Il valore δt varia in relazione alla differenza r tra lo stato del suolo al tempo t e lo stato del suolo definito come stato ottimo (Equazioni da (4.6) a (4.8)); la variazione è determinata da un parametro correttivo γ mentre ϵ esprime la tolleranza accettata per r.
+
+δt = δt−1 se −ϵ < r < ϵ, (4.6)
+     δt−1 + γ se r < −ϵ, (4.7)
+     δt−1 − γ se r > ϵ, (4.8)
+
+Al momento del calcolo del consiglio irriguo se la differenza tra lo stato attuale e quello ottimo è all’interno di un range di tolleranza (Equazione 4.6) il valore δt rimane costante; nel caso in cui il terreno sia più asciutto rispetto allo stato ottimo (Equazione 4.7) il valore δt viene incrementato tramite γ.
+Se il terreno risulta invece più umido dello stato ideale (Equazione 4.8) il valore δt viene decrementato tramite γ.
+
+Considerando come stato del suolo la quantità d’acqua contenuta al suo interno ed in funzione della suddivisione del suolo in celle è possibile calcolare con granularità elevata la differenza tra lo stato ottimo W C∗e quello al tempo W Ct calcolando la differenza cella per cella (Eq. 4.9)
+
+r = avg(W Ct − W C∗) (4.9)
+
+4.2.2 Matrice di costo
+La soluzione proposta in Sezione 4.2.1 applica un fattore correttivo alla soluzione basata su Et0 cercando di modellare i limiti di tale approccio. Più in generale, l’approccio basato su delta vuole definire un’azione correttiva fondata sulla differenza tra la quantità d’acqua contenuta nel suolo ottimo e quella contenuta nello stato attuale. Sebbene la differenza possa essere calcolata cella per cella e mediata sull’intero suolo, tale approccio non tiene in considerazione come l’acqua è distribuita all’interno del suolo: a causa dell’operatore di media, due stati con identica media di potenziale idrico ma differente distribuzione di questo all’interno delle celle riceveranno il medesimo consiglio irriguo.
+Come definito in Sezione 3.1.3 all’interno di una cella esiste un legame di proporzionalità diretta tra densità dell’apparato radicale e quantità d’acqua traspirata. è possibile dunque affermare che celle con maggiore densità radicale necessitano una quantità d’acqua maggiore rispetto a celle con bassa densità radicale; tale necessità deve essere essere riflessa nel consiglio irriguo.
+Una condizione ottimale prevede quindi una distribuzione a strati dell’umidità nel terreno, con una concentrazione d’acqua maggiore nelle zone a maggiore densità di radici. Complementariamente, la progressiva diminuzione di umidità al diminuire della densità radicale esprime la superfluità di avere elevato contenuto d’acqua in zone in cui la densità delle radici non è elevata, introducendo un concetto di risparmio idrico.
+Vista la natura cella per cella del calcolo di r (Equazione (4.9)), è possibile associare ad ogni cella di W Ct un valore (peso) nell’intervallo [0, 1] che ne rappresenti l’importanza nella fetta di suolo esaminata.
+
+r = avg((W Ct − W C∗) × Wp) (4.10)
+
+Questo approccio permette di modellare la nozione di distribuzione a strati dell’umidità nello stato ottimo tramite una distribuzione simile dei pesi all’interno della matrice di costo.
+
+# scaletta
+
+1. definizione
+2.
+3. misurazioni (papaer originale)
+4. approcci (teoria dei controlli + apprendimento automatico)
+5. approcci in teoria dei controlli
+
+## Definizione
+
+boh
+
+##
+
+Accurately determining the irrigation needs of a plant is a non trivial task.
+As it advances through its growth stages, a plant’s water requirements change significantly. Furthermore, the volume of water necessary to fulfill these different demands is heavily dependent on the soil’s retention capacity, which is in turn influenced by a large number of variables such as texture, granularity,stratification, and so on. The presence of a groundwater table equally plays a crucial role in this context, as it not only serves as an additional water sourcebut also guides the preferential development of the plant’s root system.
+One could endlessly extend this list of variables affecting the decision-making process (e.g., weather conditions, ridge tillages, etc.) but doing so would merely amplify the complexity of the problem we want to solve.
+Starting from this, we have identified a set of requirements that a smart irrigation system must adhere to in order to achieve optimal results.
+
+(i) General purpose
+While expert agronomists have empirically learned through years of studies and practical experience to weight the aforementioned variables accordingly to effectively manage the irrigation requirements of different orchards, being able to embed such an almost non-deterministic knowledge into an automated system with the goal of enhancing the decision making process is an immensely challenging goal.
+A valuable smart irrigation system should be able to achieve optimal results within different crops and soils.
+(ii) Stability
+Smart irrigation systems must demonstrate consistent and reliable performance throughout the entire irrigation period, maintaining soil moisture levels as close as possible to the desired target. Stability in such systems is crucial to avoid fluctuations that could lead to bad conditions for plant growth. A system lacking stability is exposed to the risk of subjecting plants to unintended water stress, which can negatively impact both plant health and yield.
+(iii) Responsiveness
+Regardless of how stable a system may be, it will inevitably encounter uncontrollable events that will profoundly alter its stability: these events range from disruptive events (e.g. network failures, extreme weather conditions, power outages, etc.), to non-disruptive events that might still substantially alter the state of the system (e.g. heavy rain, fertigation, irrigation system malfunctions, etc.). In such cases, the system must be capable of rapidly adapt and recover to its stable state.
+(iv) Robustness
+When it comes to IoT devices, malfunctions or degradation over time happens on a daily basis. While such conditions are inevitable, they must be carefully considered in system design. For instance, relying on a single sensor to measure irrigation amounts poses significant threats: if the sensor fails, the system might lose critical data on the most recent watering, potentially leading to miscalculations.
+Similarly, sensor readings could be erroneous due to malfunctions exactly when irrigation decisions are being made.
+These challenges necessitate careful consideration in the design of smart irrigation systems, incorporating sensor redundancy and automated procedures for detection and possible mitigation strategies for such anomalies.
+(v) Simplicity
+As a corollary to the previous points, a fundamental principle in the design of smart irrigation systems is simplicity. While it is tempting to incorporate numerous variables and complex algorithms in pursuit of precision, such complexity can often lead to diminishing returns.
+Firstly, certain variables can only be accurately measured through laboratory analysis or the use of highly expensive equipment, making their use impractical in large-scale scenarios.
+Moreover, it is important to acknowledge that as we introduce more information into a system, we also tend to increase its entropy, not necessarily leading to enhanced results. Simplicity in design is essential not only for facilitating the implementation, tuning and maintenance of the system but also for enhancing its overall reliability and transparency.
+
+## misurazioni
+
+Proximal sensors installations can be categorized into single-sensor and multi-sensor installations. As the name suggests, the single sensor installation (0D) provides a punctual measurement of soil moisture.
+Although this installation (Arif et al., 2013) is cheap, it cannot monitor the soil moisture at different depths. To do so, multi-sensor installations are devised (e.g., ground-based proximal sensors are organized so that a grid is formed). According to the layout, we distinguish: monodimensional (1D), bi-dimensional (2D), and three-dimensional (3D) grids.
+The most popular configuration is the mono-dimensional grid (Karandish and ˇSimunek, 2016; Goldstein et al., 2018; Jim´enez et al., 2020; Pan et al., 2021; Li et al., 2015), where the sensors are vertically aligned at different depths. Bi-dimensional (Egea et al., 2016; Cordeiro et al., 2016) and three-dimensional (Zapata-Sierra et al., 2021; Liang et al., 2021) grids are quite less used due to the higher required number of sensors. Yet, they allow monitoring soil moisture changes not only at different depths but also along the other axes. Bi-dimensional grids involve installations of multiple sensors per soil layer, forming thus a matrix that enables the understanding of patterns in an entire slice of soil. While, three-dimensional grids can be seen as more bi-dimensional grids side by side, allowing the examination of more than one slice. An exhaustive dissertation about sensors and data collection can be found in (Vitali et al., 2021).
+
+## approcci
+
+2.1 Sistemi basati su teoria dei controlli
+
+In ottica di una classificazione degli approcci basata sulla complessità della tecnica utilizzata nella previsione del consiglio irriguo i primi sistemi identificabili sono basati su una soglia di umidità del terreno al di sotto della quale è necessaria irrigazione, come proposto dagli autori di [55, 56, 57]: si tratta di sistemi particolarmente semplici dal punto di vista realizzativo e in grado di ottenere buoni risultati in contesti piccoli ed estremamente controllati, nei quali il numero di variabili è ridotto.
+Alla stessa categoria appartengono i tentativi di automazione del processo d’irrigazione attraverso l’utilizzo di controlli automatici [58], con particolare riferimento all’utilizzo di controllori di tipo proporzionale-integrale-derivativo (PID) [59], soluzione già ampiamente diffusa in altri ambiti.
+
+2.2 Sistemi basati su apprendimento automatico
+
+2.2.1 Machine Learning
+Negli ultimi dieci anni si è diffuso ed ha infine prevalso l’utilizzo di tecniche di machine learning [65], disciplina branca dell’intelligenza artificiale che permette la costruzione di modelli in grado di estrapolare informazioni e conoscenza da un insieme di dati in input attraverso un processo di apprendimento automatico.
+La peculiarità dei modelli di machine learning è quella di essere in grado di modellare e apprendere in contesti multivariati, cercando di predire la quantità ottima d’acqua da irrigare sulla base delle scelte passate. Buona parte delle soluzioni proposte sfruttano un learning di tipo supervisonato [66], in cui, nel contesto di studio, i modelli vengono addestrati tramite dati storici della coltura in esame e della relativa irrigazione.
+
+2.2.2 Reti neurali
+Infine, la progressiva diffusione delle reti neurali ha portato alla progettazione di una serie di sistemi che sfruttano queste per determinare l’irrigazione giornaliera.
+
+2.2.3 Reinforcement learning
+Le ultime proposte in ordine temporale riguardano l’utilizzo di tecniche di Reinforcement Learning (RL) [82], tipologia di apprendimento distinta sia da quello supervisionato che non; tenta di emulare l’apprendimento del cervello umano tramite l’interazione di un agente con un ambiente circostante, il quale cambia il suo stato e restituisce un premio/penalità rappresentante la bontà di ogni azione compiuta dall’agente. Rappresenta un approccio differente dai precedenti risultando più robusto, espressivo e in grado di fornire, in un contesto ideale, una soluzione più generalizzata. Tramite RL è possibile esplorare ed apprendere situazioni per le quali il sistema non è stato addestrato, costruisce un concetto di esperienza nel corso del tempo che permette all’agente di migliorare la propria strategia. Tali capacità sono ottenute attraverso un processo di addestramento lento, computazionalmente oneroso e necessitante di una grande mole di dati su cui potersi addestrare, caratteristiche che fanno spesso propendere verso soluzioni alternative, più semplici e meno gravose. L’apprendimento necessita di essere codificato attraverso una funzione di guadagno. Obbiettivo dell’agente è massimizzare il guadagno a lungo termine, per questo motivo soluzioni che adottano tecniche di RL spesso prendono in considerazione la massimizzazione del raccolto a fine anno, la massimizzazione del guadagno o la minimizzazione della quantità d’acqua utilizzata per irrigare.
+
+## approcci in teoria dei controlli
+
+è possibile dunque, seguendo il modello markoviano, scomporre il problema della determinazione del consiglio irriguo in un problema a granularità giornaliera in cui lo stato futuro del suolo dipende solamente dallo stato corrente e dalla relativa azione compiuta.
+
+4.1 Approcci ideali
+La definizione “approcci ideali” racchiude una categoria di approcci che assumono la correttezza dei modelli di parametrizzazione dei fenomeni naturali e del processo di simulazione. Si basano sull’assunzione che i fenomeni coinvolti nel processo di sviluppo di una coltura siano intrinsecamente deterministici.
+
+4.1.1 Et0
+Questo approccio consiste nell’effettuare una previsione della quantità d’acqua perduta dal terreno tramite evaporazione e traspirazione il giorno successivo a quello in esame. Il consiglio irriguo giornaliero è rappresentato dalla stima tramite Et0 della quantità d’acqua perduta.
+
+Irrq = Et0 (4.1)
+
+In un ambiente ideale con stato ottimo del suolo, questo approccio permette di mantenere un corretto bilancio idrico dell’ecosistema.
+I principali limiti di questo approccio derivano dalla natura semplificativa di Et0: come definito in Sezione 1.2.2, considerare la traspirazione associata a un tappeto erboso introduce un’approssimazione nel calcolo della traspirazione per colture diverse da quella di riferimento. Allo stesso modo, la nozione di previsione atmosferica introduce incertezza nella stima della quantità d’acqua evaporata. Più in generale, l’insieme di approssimazioni introdotte nel calcolo dell’evapotraspirazione potenziale di riferimento rendono difficoltoso un utilizzo pratico generalizzato.
+
+4.1.2 Formula
+Questo approccio introduce il concetto di stato “ottimo” del terreno: la quantità d’acqua d’acqua ideale che dovrebbe essere contenuta all’interno del suolo (W C∗). L’obbiettivo è determinare per ogni stato attuale (W Ct) il consiglio irriguo per cui lo stato successivo (W Ct+1) in cui si troverà il suolo sarà quello ottimo.
+
+W Ct+1 = W Ct − Et0 (4.2)
+W C∗ = W Ct − Et0 + Irrq (4.3)
+Irrq = W C∗ − W Ct + Et0 (4.4)
+
+Come descritto in Equazione (4.2), all’interno di un’ecosistema deterministico e accurato, è possibile esprimere relazioni esatte tra i fenomeni che ne influenzano lo stato. Assumendo assenza di precipitazioni e che il valore di evapotraspirazione potenziale sia rappresentativo della quantità d’acqua perduta da un suolo in un giorno, è possibile definire lo stato di domani come la quantità d’acqua presente nel suolo oggi alla quale viene sottratta la quantità perduta tramite evaporazione e traspirazione.
+Scopo della procedura d’irrigazione è fornire una quantità d’acqua tale per cui lo stato successivo a quello in esame è lo stato ottimo (Equazione (4.3)). Dato infine uno stato attuale W Ct ed uno stato ottimo W C∗ è possibile derminare il consiglio irriguo ideale per raggiungere lo stato ottimo come mostrato in Equazione (4.4).
+
+4.2 Approcci ponderati
+4.2.1 Delta
+Contrariamente agli approcci descritti in Sezione 4.1, l’approccio qui proposto cerca di modellare le approssimazioni introdotte nella parametrizzazione dei fenomeni analizzati. L’idea alla base di questa soluzione è cercare di modellare l’errore commesso nella stima di Et0.
+
+Irrq = Et0 ± δ (4.5)
+
+L’ Equazione (4.5) mostra lo stesso approccio definito in Sezione 4.1.1 ponderato di un’azione correttiva δ, il cui valore viene aggiornato precedentemente ogni singola irrigazione. Il valore δt varia in relazione alla differenza r tra lo stato del suolo al tempo t e lo stato del suolo definito come stato ottimo (Equazioni da (4.6) a (4.8)); la variazione è determinata da un parametro correttivo γ mentre ϵ esprime la tolleranza accettata per r.
+
+δt = δt−1 se −ϵ < r < ϵ, (4.6)
+     δt−1 + γ se r < −ϵ, (4.7)
+     δt−1 − γ se r > ϵ, (4.8)
+
+Al momento del calcolo del consiglio irriguo se la differenza tra lo stato attuale e quello ottimo è all’interno di un range di tolleranza (Equazione 4.6) il valore δt rimane costante; nel caso in cui il terreno sia più asciutto rispetto allo stato ottimo (Equazione 4.7) il valore δt viene incrementato tramite γ.
+Se il terreno risulta invece più umido dello stato ideale (Equazione 4.8) il valore δt viene decrementato tramite γ.
+
+Considerando come stato del suolo la quantità d’acqua contenuta al suo interno ed in funzione della suddivisione del suolo in celle è possibile calcolare con granularità elevata la differenza tra lo stato ottimo W C∗e quello al tempo W Ct calcolando la differenza cella per cella (Eq. 4.9)
+
+r = avg(W Ct − W C∗) (4.9)
+
+4.2.2 Matrice di costo
+La soluzione proposta in Sezione 4.2.1 applica un fattore correttivo alla soluzione basata su Et0 cercando di modellare i limiti di tale approccio. Più in generale, l’approccio basato su delta vuole definire un’azione correttiva fondata sulla differenza tra la quantità d’acqua contenuta nel suolo ottimo e quella contenuta nello stato attuale. Sebbene la differenza possa essere calcolata cella per cella e mediata sull’intero suolo, tale approccio non tiene in considerazione come l’acqua è distribuita all’interno del suolo: a causa dell’operatore di media, due stati con identica media di potenziale idrico ma differente distribuzione di questo all’interno delle celle riceveranno il medesimo consiglio irriguo.
+Come definito in Sezione 3.1.3 all’interno di una cella esiste un legame di proporzionalità diretta tra densità dell’apparato radicale e quantità d’acqua traspirata. è possibile dunque affermare che celle con maggiore densità radicale necessitano una quantità d’acqua maggiore rispetto a celle con bassa densità radicale; tale necessità deve essere essere riflessa nel consiglio irriguo.
+
+Una condizione ottimale prevede quindi una distribuzione a strati dell’umidità nel terreno, con una concentrazione d’acqua maggiore nelle zone a maggiore densità di radici. Complementariamente, la progressiva diminuzione di umidità al diminuire della densità radicale esprime la superfluità di avere elevato contenuto d’acqua in zone in cui la densità delle radici non è elevata, introducendo un concetto di risparmio idrico.
+Vista la natura cella per cella del calcolo di r (Equazione (4.9)), è possibile associare ad ogni cella di W Ct un valore (peso) nell’intervallo [0, 1] che ne rappresenti l’importanza nella fetta di suolo esaminata.
+
+r = avg((W Ct − W C∗) × Wp) (4.10)
+
+Questo approccio permette di modellare la nozione di distribuzione a strati dell’umidità nello stato ottimo tramite una distribuzione simile dei pesi all’interno della matrice di costo.

@@ -5,6 +5,7 @@
 \usepackage{code-lstlistings}
 \usepackage{notes}
 \usepackage{shortcuts}
+\usepackage{empheq}
 
 \school{\unibo}
 \programme{Corso di Laurea Triennale in Ingegneria e Scienze Informatiche}
@@ -91,7 +92,8 @@ Il settore agricolo è il più importante per rendere possibile questa transizio
 %
 È dunque aumentato l'interesse per lo sviluppo di tecnologie di monitoraggio dei terreni coltivati e lo sviluppo di modelli per l'irrigazione efficiente e automatica.
 
-La \cref{introduzione-agricoltura-precisione} introduce il concetto di agricoltura di precisione come strumento per l'ottimizzazione delle risorse, la \cref{componenti-chiave} elenca le sue principali componenti, la \cref{esempi-tecnologie} illustra alcuni esempi di tecnologie utilizzate, mentre la \cref{limiti} copre i limiti attuali di queste tecnologie.
+\note{Rifare qua la parte commentata}
+% La \cref{introduzione-agricoltura-precisione} introduce il concetto di agricoltura di precisione come strumento per l'ottimizzazione delle risorse, la \cref{componenti-chiave} elenca le sue principali componenti, la \cref{irrigazione-di-precisione} illustra alcuni esempi di tecnologie utilizzate, mentre la \cref{limiti} copre i limiti attuali di queste tecnologie.
 
 \section{Introduzione generale all’agricoltura di precisione}\label{introduzione-agricoltura-precisione}
 
@@ -103,7 +105,7 @@ La ricerca di metodi più sostenibili per la gestione del settore agricolo è di
 
 L'agricoltura, basandosi su conoscenze maturate nel corso di millenni, è particolarmente fragile al rapido cambiamento delle variabili climatiche\cite{Janani2024}: diventa quindi necessario riuscire a parametrizzare l'ambiente di coltivazione, capire quali parametri sono realmente importanti per le culture e studiare come possono essere monitorate, in modo che gli agricoltori abbiano gli strumenti per fronteggiare questa fragilità\cite{Monteleone2023}.
 
-\subsection{Parametri di coltivazione}
+\subsection{Parametri di coltivazione}\label{parametri-coltivazione}
 
 Vengono definite proprietà idrauliche del suolo una serie di parametri che permettono di definire il rapporto tra suolo e acqua. Questi parametri possono essere tantissimi e dipendono dal contesto che si vuole analizzare.
 In generale, possiamo vedere il suolo come la riserva idrica della pianta, l'obbiettivo dell'irrigazione deve essere, quindi, quello di somministrare la giusta quantità di acqua, evitando quindi di avere un terreno troppo bagnato o troppo asciutto.
@@ -135,12 +137,12 @@ Tutte questi parametri dipendono da una serie di fattori, come:
 
 È inoltre importante notare che sia l'apparato radicale che le proprietà fisiche del suolo non sono costanti all'interno dello stesso campo. A causa della quantità di variabili che possono modificare sostanzialmente la \ac{SWRC}, è molto difficile sapere di per certo la quantità d'irrigazione richiesta all'interno dell'intero campo senza monitorare attivamente l'andamento dell'acqua al suo interno.
 
-Un ulteriore fattore da tenere in considerazione riguarda le variabili atmosferiche: di natura non modificabili, richiedono un monitoraggio continuo e preciso. Viene definita \textit{evotraspirazione} il processo combinato attraverso il quale l'acqua viene trasferita nell'atmosfera, partendo da superfici d'acqua, dal ghiaccio, dal suolo e dalla vegetazione\cite{Kirkham2014}. Si tratta della combinazione tra \textit{evaporazione} e \textit{traspirazione}: la prima prevede il passaggio diretto dell'acqua nell'atmosfera e avviene per fattori come calore, umidità e velocità del vento; la seconda invece prevede il passaggio attraverso una pianta partendo dalle radici, fino a raggiungere le foglie, da dove avviene il passaggio all'atmosfera.
-Le stazioni meteorologiche\cite{Allen1998CropE} sono in grado di monitorare, in un dato momento, il \ac{$ET_0$} che rappresenta il valore di evotraspirazione in un dato momento di un ipotetica cultura di prato erboso in condizioni ottimali dove l'unico fattore limitante è dato dal clima. È possibile moltiplicare il dato \ac{$ET_0$} per un \ac{$K_c$} che dipende dal tipo e dallo stato di crescita di una determinata cultura, per ottenere \ac{$ET_a$}: reale evotraspirazione.
+Un ulteriore fattore da tenere in considerazione riguarda le variabili atmosferiche: di natura non modificabili, richiedono un monitoraggio continuo e preciso. Viene definita \textit{evapotraspirazione} il processo combinato attraverso il quale l'acqua viene trasferita nell'atmosfera, partendo da superfici d'acqua, dal ghiaccio, dal suolo e dalla vegetazione\cite{Kirkham2014}. Si tratta della combinazione tra \textit{evaporazione} e \textit{traspirazione}: la prima prevede il passaggio diretto dell'acqua nell'atmosfera e avviene per fattori come calore, umidità e velocità del vento; la seconda invece prevede il passaggio attraverso una pianta partendo dalle radici, fino a raggiungere le foglie, da dove avviene il passaggio all'atmosfera.
+Le stazioni meteorologiche\cite{Allen1998CropE} sono in grado di monitorare, in un dato momento, il \ac{$ET_0$} che rappresenta il valore di evapotraspirazione in un dato momento di un ipotetica cultura di prato erboso in condizioni ottimali dove l'unico fattore limitante è dato dal clima. È possibile moltiplicare il dato \ac{$ET_0$} per un \ac{$K_c$} che dipende dal tipo e dallo stato di crescita di una determinata cultura, per ottenere \ac{$ET_a$}: reale evapotraspirazione.
 Questo permette quindi di approssimare la quantità di acqua usata da una pianta e che quindi deve essere somministrata tramite irrigazione, a patto che sia presente in letteratura una stima adeguata di $K_c$, che non è però sempre disponibile. Inoltre, \ac{$ET_0$} viene calcolato su un aria potenzialmente molto estesa e potrebbe quindi non essere adeguato per zone con zone ombreggiate o venti locali.
 A ogni modo, il calcolo di \ac{$ET_a$} non tiene in considerazione le condizioni fisiche del suolo e dell'apparato radicale delle piante, per questo motivo il suo utilizzo esclusivo per decisioni riguardo l'irrigazione non è adeguato.
 
-\subsection{Agricoltura di precisione}
+\subsection{Agricoltura di precisione}\label{agricoltura-precisione-tipi}
 
 Vista la mole di variabili, diventa interessante utilizzare sistemi di monitoraggio e analisi col fine di consigliare gli agricoltori a come correttamente gestire i campi. Per questo nasce l'agricoltura di precisione (\textit{precision agriculture}): consiste nell'uso di tecnologie avanzate per aumentare l'efficienza, la produzione e la qualità dei prodotti\cite{ZHANG2002113}.
 Primi esempi di agricoltura di precisione, nel modo in cui viene intesa a oggi, risalgono già agli anni '80, dove lo sviluppo di modelli di crescita delle culture e l'utilizzo di \ac{GPS} ha permesso di mappare i campi e monitorare variabili spaziali come fertilità del suolo ed esigenze idriche\cite{201402720190101}.
@@ -221,16 +223,125 @@ I parametri dei modelli sono di solito determinati mediante la regolazione itera
 Un \ac{DSS}, sistema di supporto alle decisioni, è un sistema informativo in grado di supportare le attività decisionali fornendo raccomandazioni. Un \ac{DSS} efficace è un pacchetto software interattivo in grado di assistere agricoltori, consulenti o amministratori nel prendere decisioni che richiedono la sintesi di numerosi e diversi dati. In genere, i DSS incorporano uno o più modelli di simulazione che consentono di preparare raccomandazioni che tengono conto di fattori specifici della coltura e del sito, come il clima, le date di semina, i tipi di terreno, le caratteristiche del sistema d' irrigazione, ecc. I DSS sono generalmente pacchetti software che includono uno o più modelli di simulazione e strumenti di comunicazione per gestire gli input e gli output. Tra i sistemi per l'acquisizione dei dati, possono esserci collegamenti con servizi web specifici (ad esempio immagini satellitari, dati climatici in tempo reale, ecc.) e sensori che forniscono dati in tempo reale. I DSS basati su modelli con sensori o strumenti consentono agli utenti di verificare le previsioni del modello e di perfezionare le raccomandazioni\cite{GALLARDO2020106209}.
 \newpage
 
-\section{Esempi di tecnologie e metodi avanzati nell’agricoltura di precisione}
-\label{esempi-tecnologie}
-Monitoraggio (!) - il nostro sistema prescrittivo è frutto di due anni di ricerca, ma già un sistema accurato di monitoraggio è un prodotto molto valido (e non così scontato) in industria agro
-Machine learning e intelligenza artificiale per la gestione dell'irrigazione
-Sistemi di irrigazione di precisione
+\section{Irrigazione di precisione}
+\label{irrigazione-di-precisione}
+% Definizione, breve related (presa dal paper in allegato), perchè è importante.
 
-\section{Limitazioni attuali dell’agricoltura di precisione}
-\label{limiti}
-Costi e accessibilità per i piccoli agricoltori
-Sfide legate alla raccolta e gestione dei dati
+Questo documento ha interesse a mostrare un esempio di sistema d'irrigazione automatico su piccola scala, ricade quindi nella branca del precision irrigation che già abbiamo definito in \cref{agricoltura-precisione-tipi}.
+
+% \subsection{Formulazione di un sistema di irrigazione di precisione}
+
+
+% Qua serebbe carino mettere le 5 caratteristiche che ha scritto il brother, solo che non voglio copia incollare, non posso citarlo essendo non pubblicato.
+
+\subsection{Approcci di misurazione}\label{approcci-misurazione}
+
+Tra i sensori descritti in \cref{componenti-chiave}, quelli che vengono utilizzati in questo contesto sono sia i sensori on-site che remoti.
+I primi sono tipicamente posizionati sotto il terreno in modo da monitorare l'umidità del suolo, offrendo misurazioni precise.
+I secondi invece vengono utilizzati per raccogliere valori a livello globale e sono di natura meno precisi.
+In \note{cita studio} viene presentato un sistema che fa utilizzo di entrambe le tipologie di sensori, ma tipicamente è un approccio non utilizzato a causa dell'elevato costo.
+
+I sensori on-site possono essere classificati in base alla quantità di sensori per pianta. L'installazione a sensore singolo, la più economica, non può monitorare l'umidità a diverse profondità.
+I sistemi multi-sensore sono in grado di creare griglie multi-dimensionali.
+La disposizione più utilizzata è quella di griglie monodimensionali, dove i sensori sono allineati verticalmente a diverse profondità.
+Le griglie bidimensionali e tridimensionali, poco utilizzate a causa del prezzo, permettono di monitorare lungo più assi oltre che la profondità. Quelle bidimensionali prevedono l'installazione di più sensori per ogni strato, formando una matrice che descrive un'intera fetta di terreno, mentre quelle dimensionali possono essere viste come la visualizzazione di più fette di terreno.
+
+Le installazioni di sensori prossimali possono essere classificate in installazioni a sensore singolo e multi-sensore. Come suggerisce il nome, l'installazione a sensore singolo (0D) fornisce una misurazione puntuale dell'umidità del suolo.
+Sebbene questa installazione (Arif et al., 2013) sia economica, non può monitorare l'umidità del suolo a diverse profondità. A tal fine, vengono ideate installazioni multi-sensore (ad esempio, i sensori a terra prossimali sono organizzati in modo da formare una griglia). In base alla disposizione, si distinguono: griglie monodimensionali (1D), bidimensionali (2D) e tridimensionali (3D).
+
+\subsection{Approcci all'irrigazione di precisione}
+
+L'approccio più semplice risiede in sistemi basati su una soglia, dove l'irrigazione viene fornita quando la misura dell'umidità del terreno è al di sotto di un determinato valore.
+Questo genere di approcci soffre dell'inabilità nel determinare la corretta quantità di acqua necessaria al terreno, rendendoli adatti solo in ambienti controllati con poche variabili.
+
+Un altro approccio può essere trovato nell'utilizzo di controllori, progettati per gestire ambienti dinamici. Il loro utilizzo in campo aperto è scoraggiato dalla quantità di variabili incontrollabili.
+Un esempio particolarmente importante riguarda l'utilizzo di controllori di tipo proporzionale-integrale-derivativo (PID), soluzione già ampiamente diffusa in altri ambiti.
+
+Esistono approcci basati sull'apprendimento autonomo, sfruttando la diffusione dei dispositivi IoT per raccogliere grandi quantità di dati attraverso i quali addestrare modelli di machine learning: dalla classificazione, alla regressione, fino a sistemi più complessi che coinvolgono le reti neurali e il deep reinforcement learning.
+Il problema principale in questo genere di approcci si trova nel rischio di over-fitting del modello: dati non sufficientemente eterogenei portano i modelli a essere addestrati per gestire culture specifiche, in uno stato di vita specifico, in specifiche condizioni del suolo e atmosferiche.
+La raccolta di dati di alta qualità è quindi un processo costoso e lungo nel tempo, soprattutto considerando che la raccolta dei dati è possibile solo durante le stagioni d'irrigazione.
+
+% COPIA E INCOLLA Gli autori di [19] sottolineano la necessità di condurre casi di studio pratici e sul campo piuttosto che affidarsi esclusivamente a ricerche condotte in ambienti simulati o controllati (ad esempio, serre), sostenendo che i risultati derivati da tali ambienti controllati spesso non sono rilevanti o trasferibili ad altri contesti oltre a quelli specificamente descritti negli studi.%
+
+Questo documento tiene in considerazione un sistema senza un suolo o cultura reale, per questo motivi approcci ad apprendimento autonomo non era ottimale.
+
+% \subsection{Approcci nel campo della teoria dei controlli}
+
+% \subsubsection{Approcci ideali}
+
+% Si basano sull'idea che i fenomeni che fanno parte della crescita di una cultura siano deterministici.
+
+% \paragraph{$ET_0$}
+
+% Questo approccio fa puramente utilizzo di \ac{$ET_0$}. Il consiglio irriguo giornaliero è quindi la stima della quantità d'acqua perduta.
+
+% \begin{equation}\label{irr}
+%     \text{Irr}_q = ET_0
+% \end{equation}
+
+% I limiti di questo approccio, come visto in \cref{parametri-coltivazione}, è la natura di \ac{$ET_0$}, che porta con se approssimazioni intrinseche che possono risultare molto significative.
+
+% \paragraph{Ottimo}
+
+% Questo approccio utilizza l'idea dell'esistenza di uno stato "ottimo" del suolo, dove la quantità di acqua contenuta all'interno del terreno è ideale.
+% Chiameremo $\text{WC}^*$ il \ac{SWC} ideale. Vogliamo quindi determinare per ogni stato attuale $WC_t$ il consiglio irriguo in modo che lo stato successivo $\text{WC}_{t+1}$ in cui si trova il terreno sia quello ottimo.
+
+% \begin{flalign}
+%     \text{WC}_{t+1} &= \text{WC}_t - ET_0 \label{wc-futuro} \\
+%     \text{WC}^*     &= \text{WC}_t-ET_0+\text{Irr}_q\label{wc-ottimo} \\
+%     \text{Irr}_q    &= \text{WC}^*-\text{WC}_t+ET_0\label{irr-con-ottimo}
+% \end{flalign}
+
+% In un contesto in cui il sistema in esame è deterministico e accurato, è possibile esprimere relazioni esatte tra i fenomeni in atto, come vediamo in \cref{wc-futuro}.
+% È possibile definire lo stato del giorno successivo assumendo l'assenza di precipitazioni e che il valore di evapotraspirazione potenziale sia effettivamente rappresentativo della quantità di acqua persa da un terreno in un giorno.
+% Come definito in \cref{wc-ottimo}, lo scopo della procedura d'irrigazione è fare in modo che il \ac{SWC} del giorno successivo sia quello ottimo. È quindi possibile, dato lo stato attuale e uno ottimo, definire il consiglio irriguo, come in \cref{irr-con-ottimo}
+
+% \subsubsection{Approcci ponderati}
+
+% Questi approcci cercando di modellare le approssimazioni introdotte dalla parametrizzazione dei fenomeni analizzati.
+
+% \paragraph{Delta}\label{delta}
+
+% Questa soluzione vuole modellare l'errore commesso nella stima di \ac{$ET_0$}.
+
+% \begin{equation}\label{irr-delta}
+%     \text{Irr}_q = ET_0 \pm \delta
+% \end{equation}
+
+% Utilizza quindi \cref{irr} ma pondera un'azione correttiva $\delta$, il cui valore viene aggiornato prima di ogni irrigazione. Sia $r$ la differenza tra lo stato del suolo al tempo $t$ e lo stato del suolo "ottimo"; Siano $\gamma$ e $\varepsilon$ rispettivamente il parametro correttivo che determina $r$ e la tolleranza accettata per $r$
+
+% \begin{empheq}[left={\delta_t=\empheqlbrace}]{align}
+%     \delta_{t-1} & && \hspace*{-8em} \text{se } -\varepsilon < r < \varepsilon \label{pond-1}\\
+%     \delta_{t-1} & + \gamma && \hspace*{-8em} \text{se } r < -\varepsilon \label{pond-2} \\
+%     \delta_{t-1} & - \gamma && \hspace*{-8em} \text{se } r > \varepsilon \label{pond-3}
+% \end{empheq}
+
+% A ogni determinazione del consiglio irriguo, se la differenza tra lo stato attuale e quello ottimo è all'interno di un range di tolleranza (\cref{pond-1}) il valore di $\delta_t$ rimane costante. Se il suolo è più asciutto del caso ottimo (\cref{pond-2}) allora il valore di $\delta_t$ viene aumentato di $\gamma$.  Al contrario, se il terreno è troppo bagnato, il valore di $\delta_t$ viene diminuito di $\gamma$(\cref{pond-3}).
+
+% Se suddividiamo il terreno in celle di cui possiamo misurare la percentuale di acqua, possiamo definire con alta granularità la differenza tra lo stato ottimo $\text{WC}^*$ e lo stato attuale $\text{WC}_t$ come la differenza cella per cella.
+
+% \begin{equation}\label{r}
+%     r = \frac{\sum\limits_{i=0}^h \sum\limits_{j=0}^w (WC_{t[i,j]} - WC^*_{[i,j]})}{h \times w}
+% \end{equation}
+
+% Dove $h$ e $w$ sono rispettivamente righe e colonne delle matrici del suolo.
+
+% \paragraph{Matrice di costo}
+
+% L'approccio visto in \cref{delta} non tiene in considerazione come esattamente sia distribuita l'acqua all'interno del suolo, che come abbiamo visto non è necessariamente distribuito allo stesso modo in tutto il terreno. In questo modo, due terreni con distribuzione totalmente diversa ma la cui media di potenziale idrici produceranno lo stesso consiglio irriguo.
+% Questo è un problema in quanto celle con maggiore densità radicale necessitano una quantità d'acqua maggiore rispetto a celle con bassa densità radicale. \note{dire da qualche parte sta cosa}
+% Avere un modo di calcolare il consiglio irriguo in base alla distribuzione d'acqua nel terreno porterebbe quindi a un risparmio d'acqua, permettendo di fornire l'irrigazione necessaria in base alla densità radicale.
+
+% Sfruttando la natura cella per cella del calcolo di $r$ secondo l'\cref{r} è possibile associare a ogni cella di $\text{WC}_t$ un valore nell'intervallo [0,1] che ne rappresenti l'importanza nella fetta di suolo in esame.
+
+% \begin{equation}\label{r-matrice-costo}
+%     r = \frac{\sum\limits_{i=0}^h \sum\limits_{j=0}^w (WC_{t[i,j]} - WC^*_{[i,j]})\times C_{[i,j]}}{h \times w}
+% \end{equation}
+
+% \section{Limitazioni attuali dell’agricoltura di precisione}
+% \label{limiti}
+% Costi e accessibilità per i piccoli agricoltori
+% Sfide legate alla raccolta e gestione dei dati
 
 
 \chapter{Tecnologie utilizzate}
