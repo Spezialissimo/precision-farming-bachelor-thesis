@@ -305,7 +305,7 @@ Si tratta di un processo iterabile nel corso del ciclo di vita di una coltura co
 All’interno del Capitolo 2 sono state descritte alcune delle numerose soluzioni proposte in letteratura al problema della previsione del consiglio irriguo di una coltura.
 In questo caso di studio l’esplorazione di tecniche di machine learning, reti neurali o reinforcement learning non è stata possibile a causa della necessità di queste tecniche di avere a disposizione una quantità di dati maggiore di quella effettivamente disponibile.
 *related works, lati negativi machine learning*
->Come termine di paragone, sebbene gli autori di [80] propongano un modello di predizione basato su reti neurali applicabile in contesti in cui la quantità di dati a disposizione è limitata, la procedura di addestramento di tale modello utilizza dati storici inerenti due anni solari di coltivazione, quantità superiore a quella disponbile allo stato attuale del caso di studio. Il problema nella determinazione del consiglio irriguo è rappresentato dalla determinazione della frequenza e quantità (Irrq) d’acqua con cui irrigare. In letteratura è possibile trovare esempi che considerano frequenze d’irrigazione diverse: oltre ai più comuni approcci a frequenza giornaliera [27, 78, 80] gli autori di [83] propongono un modello per il calcolo di un consiglio irriguo della durata di quattro giorni mentre [43] modella il problema con granularità settimanale; questo lavoro considera un modello ad irrigazione giornaliera.
+>Come termine di paragone, sebbene gli autori di [80] propongano un modello di predizione basato su reti neurali applicabile in contesti in cui la quantità di dati a disposizione è limitata, la procedura di addestramento di tale modello utilizza dati storici inerenti due anni solari di coltivazione, quantità superiore a quella disonbile allo stato attuale del caso di studio. Il problema nella determinazione del consiglio irriguo è rappresentato dalla determinazione della frequenza e quantità (Irrq) d’acqua con cui irrigare. In letteratura è possibile trovare esempi che considerano frequenze d’irrigazione diverse: oltre ai più comuni approcci a frequenza giornaliera [27, 78, 80] gli autori di [83] propongono un modello per il calcolo di un consiglio irriguo della durata di quattro giorni mentre [43] modella il problema con granularità settimanale; questo lavoro considera un modello ad irrigazione giornaliera.
 
 Come supportato dalle proposte evidenziate in Sezione 2.2.3, è possibile descrivere il processo decisionale per la determinazione del consiglio irriguo attraverso un processo decisionale di Markov [102] che, nel contesto di studio in esame, assume il suolo come un ambiente stocastico in cui lo stato futuro di questo (i.e. la quantità d’acqua al suo interno) dipende solamente dallo stato attuale e dalla relativa azione compiuta in tale stato (i.e. irrigazione). è possibile dunque, seguendo il modello markoviano, scomporre il problema della determinazione del consiglio irriguo in un problema a granularità giornaliera in cui lo stato futuro del suolo dipende solamente dallo stato corrente e dalla relativa azione compiuta.
 
@@ -473,3 +473,8 @@ Vista la natura cella per cella del calcolo di r (Equazione (4.9)), è possibile
 r = avg((W Ct − W C∗) × Wp) (4.10)
 
 Questo approccio permette di modellare la nozione di distribuzione a strati dell’umidità nello stato ottimo tramite una distribuzione simile dei pesi all’interno della matrice di costo.
+
+## Cose da scrivere a Manuele
+
+Vorrei citare il paper, come faccio?
+
