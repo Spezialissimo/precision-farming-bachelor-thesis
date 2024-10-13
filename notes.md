@@ -476,5 +476,6 @@ Questo approccio permette di modellare la nozione di distribuzione a strati dell
 
 ## Cose da scrivere a Manuele
 
-Vorrei citare il paper, come faccio?
+Modello dei sensori
+Ram del raspberry
 
