@@ -479,3 +479,53 @@ Questo approccio permette di modellare la nozione di distribuzione a strati dell
 Modello dei sensori
 Ram del raspberry
 
+# Struttura terzo capitolo
+- Analysis
+    High-level goals
+    Constraints
+    Functional and non-functional requirements
+    Requirements analysis
+    Problem analysis
+    Domain model
+- Design
+    Architecture
+    Detailed design
+- Implementation
+    Implementation highlights
+- Evaluation, già questo lo leverei.
+    Testing
+    Experimental evaluation / demos -- the idea here is to provide evidence, possibly using quantitative metrics (but, sometimes, even qualitative metrics could be ok)
+
+- Analisi
+    - Descrizione (Spiegazione delle necessità del progetto e i vincoli)
+    - Modello del Dominio (descrizione delle entità e i rapporti fra loro, quindi UML di analisi)
+    - Requisiti (spiegare cosa l’applicazione dovrà fare: requisiti funzionali e non funzionali)
+- Design
+    - Architettura divisa per ogni software (Per esempio spiegare che è una comunicazione tre 3 software attraverso diversi protocolli ecc. + architettura a microservizi del beckend + UML)
+
+
+
+Temi da toccare e capire dove vanno messi:
++ Calcolo consiglio irriguo (architettura)
++ Interpolazione sensori (architettura)
++ Persistenza (architettura)
+
+- Analisi
+    - Descrizione (Spiegazione delle necessità del progetto e i vincoli)
+    - Modello del Dominio (descrizione delle entità e i rapporti fra loro, quindi UML di analisi)
+    - Requisiti (spiegare cosa l’applicazione dovrà fare: requisiti funzionali e non funzionali)
+- Design
+    + Architettura Arduino (json, interrupt timer per la lettura dei sensori, superloop per pompa)
+    + Architettura front-end (spiegazione interfaccia?, uso di chartjs, uso di pooling per stato attuale, aggiustamento del tempo ad caricamento pagina, API)
+    + Architettura backend-end (elaborazione dati sensori, calcolo consiglio irriguo, persistenza, API, architettura simil-microservizi con uml ecc.)
+    + UML finale
+
+
+Ciao Manuele,
+Ti rigrazio tantissimo della correzione, non preoccuparti per la pedanza, anzi, più correzioni ricevo meglio è.
+Non sono un bravissimo scrittore quindi consigli e correzioni sono molto utili per capire dove migliorare.
+Oggi pomeriggio leggerò tutte le correzioni e lavorerò per migliorare il capitolo.
+
+Ne approfitto per fare un paio di domande ulteriori:
++ Riguardo il secondo capitolo, mi servirebbe sapere il modello della pompa e dei sensori. Inoltre sarebbe comodo sapere la configurazione del raspberry, che esiste in versione da 1,2,4 e 8 GB di RAM.
++ Per quanto riguarda l'aggiunta
