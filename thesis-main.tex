@@ -260,6 +260,16 @@ Infine, i \ac{DSS}, sistema di supporto alle decisioni, coprono un ruolo importa
 % Definizione, breve related (presa dal paper in allegato), perchè è importante.
 
 Questo documento ha interesse a mostrare un esempio di sistema d'irrigazione automatico su piccola scala, ricade quindi nella branca del Precision Irrigation, già definita nella \cref{agricoltura-precisione-tipi}.
+Possono essere indentificate alcune caratteristiche che un sistema d'irrigazione di precisione dovrebbe avere:
+\begin{itemize}
+    \item \textbf{Scopo generale}, un sistema d'irrigazione intelligente di valore deve essere in grado di ottenere risultati ottimali su colture e suoli diversi.
+    \item \textbf{Stabilità}, I sistemi d'irrigazione intelligenti devono garantire prestazioni costanti e affidabili, mantenendo i livelli di umidità del suolo il più vicino possibile all'obiettivo desiderato. La stabilità in questi sistemi è essenziale per evitare oscillazioni che potrebbero compromettere la crescita delle piante.
+    \item \textbf{Reattività}, il sistema deve essere in grado di adattarsi rapidamente e ritrovare il proprio stato di stabilità di fronte a eventi capaci di modificare significativamente lo stato del sistema, come eventi atmosferici estremi.
+    \item \textbf{Robustezza}, è fondamentale prevedere la ridondanza dei sensori e procedure automatiche per rilevare e mitigare anomalie e malfunzionamenti.
+    \item \textbf{Semplicità} mantenere il sistema semplice è cruciale per semplificare l'implementazione, la regolazione e la manutenzione del sistema, ma anche per migliorarne l'affidabilità e la trasparenza complessiva.
+\end{itemize}
+
+Nella \cref{approcci-misurazione} sono introdotti quali sono gli approcci adottati per la raccolta dei dati, mentre nella \cref{approcci-irrigazione} si introducono i principali approcci per il calcolo del consiglio irriguo.
 
 % Qua serebbe carino mettere le 5 caratteristiche che ha scritto il brother, solo che non voglio copia incollare, non posso citarlo essendo non pubblicato.
 
@@ -281,7 +291,7 @@ Questi ultimi due tipi d'installazione sono meno utilizzati a causa del maggior 
     \centering\includegraphics[width=0.7\linewidth]{./figures/griglie.png}\caption{In ordine, un esempio d'installazione monodimensionale, bidimensionali e tridimensionale\cite{FRANCIA2022106924}.}\label{fig.griglie}
 \end{figure}
 
-\subsection{Approcci all'irrigazione di precisione}
+\subsection{Approcci al calcolo del consiglio irriguo}\label{approcci-irrigazione}
 
 Contrariamente alla \cref{approcci-misurazione}, che si poneva l'obiettivo di descrivere approcci alla misurazione, questa sezione ha come obiettivo quello di descrivere alcuni approcci all'irrigazione: ogni approccio utilizza in modo diverso i dati raccolti nei diversi approcci di misurazione, con l'obiettivo ultimo di somministrare la corretta quantità di acqua.
 
