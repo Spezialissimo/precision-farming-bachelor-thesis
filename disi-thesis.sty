@@ -8,6 +8,14 @@
 \usepackage[inline]{enumitem}
 \usepackage{setspace}
 \usepackage{fancyhdr}
+\usepackage{titlesec}
+
+\makeatletter
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+  {2ex \@plus 1ex \@minus 0.5ex}% Spazio sopra (aumentato)
+  {0.5ex \@plus 0.5ex}% Spazio sotto (diminuito)
+  {\normalfont\normalsize\bfseries}}
+\makeatletter
 
 \fancypagestyle{plain}{
     \fancyhf{}

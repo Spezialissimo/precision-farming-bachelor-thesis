@@ -529,3 +529,19 @@ Oggi pomeriggio leggerò tutte le correzioni e lavorerò per migliorare il capit
 Ne approfitto per fare un paio di domande ulteriori:
 + Riguardo il secondo capitolo, mi servirebbe sapere il modello della pompa e dei sensori. Inoltre sarebbe comodo sapere la configurazione del raspberry, che esiste in versione da 1,2,4 e 8 GB di RAM.
 + Per quanto riguarda l'aggiunta
+
+
+
+anni 2003, 2006 e 2011. Questi
+risultati provengono dalla simulazione del nostro modello CGE regionale
+dopo che l'economia è stata colpita dagli shock di siccità descritti nella Sezione 3.3.
+3.3. Le nostre stime delle perdite totali di PIL variano dallo 0,03% in caso di lieve
+siccità, allo 0,05% e allo 0,10% in caso di siccità moderata ed estrema, rispettivamente.
+siccità moderata ed estrema, rispettivamente. Gli effetti totali stimati sul PIL, sebbene
+relativamente piccoli a causa del ridotto peso del settore agricolo nell'economia italiana, rimangono comunque
+dell'economia italiana, restano comunque piuttosto consistenti in termini monetari. La perdita totale di
+Perdite totali di PIL, una volta aggiustate per l'IPC ai prezzi nominali del 2017, rappresentano un costo
+di 0,56, 0,92 e 1,75 miliardi di euro in un anno di siccità lieve, moderata ed elevata, rispettivamente.
+anno, rispettivamente
+
+Tradotto con DeepL.com (versione gratuita)
