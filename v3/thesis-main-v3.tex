@@ -1,0 +1,421 @@
+\documentclass[12pt,a4paper,openright,twoside, openany]{book}
+\usepackage{acronym}
+\usepackage[utf8]{inputenc}
+\usepackage{../lib/disi-thesis}
+\usepackage{../lib/code-lstlistings}
+\usepackage{../lib/notes}
+\usepackage{../lib/shortcuts}
+\usepackage{empheq}
+
+
+\school{\unibo}
+\programme{Corso di Laurea Triennale in Ingegneria e Scienze Informatiche}
+\title{Progettazione e realizzazione di un simulatore per l'irrigazione di precisione}
+\author{Davide Speziali}
+\date{\today}
+\subject{Basi di Dati Avanzate}
+\supervisor{Matteo Golfarelli}
+\cosupervisor{Manuele Pasini}
+\session{I}
+\academicyear{2023-2024}
+
+% Definition of acronyms
+\acrodef{IoT}{Internet of Thing}
+\acrodef{GPIO}{General Purpose Input/Output}
+\acrodef{PWM}{pulse-width modulation}
+\acrodef{SBC}{Single Board Computer}
+\acrodef{JS}{JavaScript}
+\acrodef{ONU}{Organizzazione delle Nazioni Unite}
+\acrodef{SDG}{Sustainable Development Goals}
+\acrodef{FC}{Field Capacity}
+\acrodef{PWP}{Permanent Wilting Point}
+\acrodef{SWRC}{Soil Water Retention Curve}
+\acrodef{SWC}{Soil Water Content}
+\acrodef{SWP}{Soil Water Potential}
+\acrodef{$ET_0$}{potential evapotranspiration}
+\acrodef{$ET_a$}{actual evapotranspiration}
+\acrodef{$K_c$}{crop coefficient}
+\acrodef{GPS}{Global Positioning System}
+\acrodef{SSLM}{Site-Specific Land Management}
+\acrodef{SSNM}{Site-Specific Nutrient Management}
+\acrodef{SSWM}{Site-Specific Weed Management}
+\acrodef{SSCP}{Site Specific Crop Protection}
+\acrodef{GIS}{Geographical Information System}
+\acrodef{CSM}{Crop Simulation Model}
+\acrodef{VRT}{Variable Rate Technology}
+\acrodef{DSS}{Decision Support System}
+\acrodef{PID}{proporzionale-integrale-derivativo}
+\acrodef{LPWA}{Low-Power Wide-Area}
+\acrodef{MPC}{Model Predictive Control}
+\acrodef{OSS}{Obiettivi di Sviluppo Sostenibile}
+\mainlinespacing{1.241} % line spacing in mainmatter, comment to default (1)
+
+\begin{document}
+\frontmatter\frontispiece
+%
+% \begin{abstract}
+%     TODO
+% \end{abstract}
+
+% \begin{dedication} % this is optional
+%     Optional. Max a few lines.
+% \end{dedication}
+%
+%----------------------------------------------------------------------------------------
+\tableofcontents
+\listoffigures     % (optional) comment if empty
+%\lstlistoflistings % (optional) comment if empty
+
+\mainmatter
+%
+% \chapter*{Introduzione}
+% \addcontentsline{toc}{chapter}{Introduzione}
+% \setcounter{chapter}{0}
+%
+% \paragraph{Structure of the Thesis}
+% \note{At the end, describe the structure of the paper}
+\chapter{Agricoltura di precisione}
+%
+La lotta al cambiamento climatico è uno dei temi più importanti per il futuro delle popolazioni del pianeta.
+
+A partire dal 2015 l'\ac{ONU}, con l'obiettivo di rispondere in maniera sistematica al problema del cambiamento climatico, ha adottato l'Agenda 2030 per lo Sviluppo Sostenibile.
+In questo contesto vengono specificate 17 \ac{SDG}(\ac{OSS} in italiano): sono il programma per realizzare un futuro migliore e più sostenibile per tutti; affrontano le sfide globali che è necessario affrontare, tra cui quelle relative a povertà, disuguaglianza, cambiamento climatico, degrado ambientale, pace e giustizia\cite{SDG-defininition}. Si tratta di un totale di 169 obiettivi da raggiungere entro il 2030, divisi in 17 categorie. Tra esse la sesta ``Acqua pulita e sanificazione'', si concentra sul garantire un accesso sicuro e sostenibile alle risorse idriche \cite{SDG-6}. Il punto 6.4 in particolare punta a un miglioramento dell'efficienza dell'uso di acqua in tutti i settori \cite{SDG-6-4-1,UN-WATER-WATER-USE-EFF-21}.
+Il settore agricolo è uno dei maggiori consumatori di acqua: dal 1970, la quantità di acqua utilizzata per l'agricoltura è quasi raddoppiata e attualmente rappresenta circa tre volte l'uso idrico rispetto a qualsiasi altro settore\cite{FAO-AQUASTAT-2020}.
+\ac{SDG} 2 si pone l'obiettivo di combattere la fame globale. Uno dei target associati, il 2.4, afferma che è necessario ``garantire sistemi di produzione alimentare sostenibili e implementare pratiche agricole resilienti che aumentino la produttività e la produzione, che aiutino a proteggere gli ecosistemi, che rafforzino la capacità di adattamento ai cambiamenti climatici, a condizioni meteorologiche estreme, siccità, inondazioni e altri disastri e che migliorino progressivamente la qualità del suolo''\cite{SDG-2.4}.
+
+Di conseguenza, è cresciuto l'interesse per lo sviluppo di tecnologie digitali avanzate, volte a monitorare e gestire in modo automatico ed efficiente l'intero settore agricolo. Queste tecnologie rientrano nell'ambito dell'agricoltura di precisione, i cui concetti principali e contesto operativo sono introdotti nella \cref{introduzione-agricoltura-precisione}. La \cref{componenti-chiave} descrive i principali componenti, mentre la \cref{irrigazione-di-precisione} si focalizza sull'irrigazione di precisione.
+\newpage
+%--------------------------------------------------------------------------------------------------
+\section{Introduzione generale all’agricoltura di precisione}\label{introduzione-agricoltura-precisione}
+
+\subsection{Agricoltura e cambiamento climatico}
+
+L'agricoltura è una delle attività più importanti per l'essere umano: per questo motivo nei secoli ha subito enormi trasformazioni e l'era moderna non fa differenza \cite{FEDERICO-FEEDING-2005}. Oggi è interessata da continui progressi tecnologici e cambiamenti sociali, economici e ambientali. Anche grazie a innovazioni tecnologiche, la produzione è in stabile aumento, permettendo a tutte le popolazioni del mondo di accedere a una maggiore varietà di prodotti \cite{FAO-AGRO-STATS-2023}.
+
+La ricerca di metodi più sostenibili per la gestione del settore agricolo è diventato un obiettivo primario per affrontare nuove sfide a livello mondiale \cite{SDG-2-4-1}. In primis il costante aumento della popolazione, che si stima raggiungerà i 10 miliardi persone entro il 2080 \cite{UN-POPULATION-2024}, porterà un aumento della richiesta di prodotti agricoli e quindi la necessità di un aumento dell'offerta. Diventa sempre più importante agire per quanto riguarda il tema dell'impatto che il settore ha sull'ambiente, come deforestazione, uso eccessivo di risorse idriche e fertilizzanti inquinanti \cite{EIOM-2012}.
+Tutti questi fattori contribuiscono all'aumento delle temperature, che a loro volta incrementano la probabilità di eventi meteorologici estremi, capaci di danneggiare o distruggere completamente i raccolti. Gli autori di \cite{ZHANG-PENG-2017} stimano che, entro la fine del secolo, il gli effetti del cambiamento climatico potrebbe ridurre le rese di riso, grano e mais in Cina rispettivamente del 36,25\%, 18,26\% e 45,10\%; in \cite{Garcia2021} vengono analizzati gli effetti di eventi di siccità sul territorio Italiano facendo riferimento agli anni 2003, 2006 e 2011: stimano una perdita del PIL tra lo 0,03\% e lo 0,10\%, quindi rappresentano un costo fino a 1.75 miliardi di euro.
+
+Sin dalle sue origini, l'agricoltura si è evoluta attraverso un processo di adattamento continuo ai parametri di coltivazioni come le condizioni ambientali e climatiche locali. Per millenni, le comunità agricole hanno osservato i cicli naturali, come il cambiamento delle stagioni, la variabilità delle precipitazioni e l'alternanza tra periodi di siccità e abbondanza di acqua. Queste conoscenze, tramandate di generazione in generazione, hanno permesso agli agricoltori di sviluppare tecniche di coltivazione sempre più sofisticate e adatte alle specificità dei loro territorio. Tecniche come la rotazione delle colture, l'irrigazione e la selezione di varietà resistenti sono state frutto di un processo di sperimentazione e adattamento che ha richiesto secoli.
+Questo lungo percorso di evoluzione ha sempre avuto un ritmo relativamente lento, poiché i cambiamenti climatici ed ecologici si manifestavano su tempi geologici o lunghi periodi storici\cite{Janani2024}.
+Il cambiamento climatico porta i parametri di coltivazione a modificarsi molto rapidamente, rendendo questo sistema inadeguato in quanto troppo lento. Diventa quindi importante essere in grado di monitorare questi parametri in modo da capire quali azioni possono garantire la salute del raccolto\cite{Monteleone2023}. In \cref{parametri-coltivazione} vengono introdotti i principali parametri di coltivazione.
+\newpage
+\subsection{Parametri di coltivazione}\label{parametri-coltivazione}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.4\linewidth]{../figures/SWC-costants.png}
+    \caption{Valori soglia per SWC\cite{Ding2022}.}
+    \label{fig.SWC-costants}
+\end{figure}
+
+Vengono definite proprietà idrauliche del suolo un insieme di caratteristiche del suolo che permettono di descrivere in maniera approssimata il rapporto tra suolo e acqua. Questi parametri possono essere tantissimi e dipendono dal contesto che si vuole analizzare.
+
+La quantità di acqua presente all'interno del terreno viene rappresentata dal \ac{SWC}, tipicamente misurato in percentuale di volume di acqua rispetto al volume del suolo.
+In \cref{fig.SWC-costants}, è possibile vedere le condizioni del terreno in base a \ac{SWC}.
+\begin{description}[noitemsep]
+    \item[Saturation] indica uno stato in cui all'interno del terreno non è più presente l'aria e ogni poro è quindi pieno di acqua. Fatta eccezione per certi tipi di culture, come quella del riso, questo stato non è adatto alla crescita della pianta.
+    \item[Oven dry] al contrario, è lo stato con totale assenza di acqua, non è quindi adatto alla crescita di nessun tipo di pianta.
+    \item[\ac{FC}] rappresenta il valore di \ac{SWC} massimo che permette alla pianta di assorbire l'acqua dal terreno. In questo stato i pori più grandi hanno al loro interno sia aria che acqua, mentre quelli più piccoli sono pieni di acqua.
+    \item[\ac{PWP}] è il punto dopo il quale la pianta non riesce più a estrarre acqua dal terreno, per quanto sia ancora in minima parte presente.
+\end{description}
+\newpage
+Queste costanti, che sono meglio descritte in \cite{RAI2017505}, permettono di definire quale dovrebbe essere la percentuale di acqua nel suolo per permettere la crescita sana delle piante: \ac{SWC} deve essere compreso tra \ac{FC} e \ac{PWP}.
+
+Un ulteriore parametro è \ac{SWP}, potenziale idrico del suolo, rappresenta l'energia necessaria per estrarre l'acqua dal suolo e indica quindi la disponibilità di acqua alle piante. Viene espresso in termini di pressione e comprende diverse componenti che contribuiscono al valore finale\cite{MarshallT.J.TheoJohn1996Sp}. Le principali sono:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Potenziale gravitazionale}: deriva dalla forza di gravità e rappresenta l'energia potenziale dovuta alla sua posizione verticale.
+    \item \textbf{Potenziale matriciale}: rappresenta l'energia necessaria per estrarre l'acqua dal suolo, risultante dalle forze d'interazione tra l'acqua e le particelle del suolo. È dovuto a forze come adesione e capillarità.
+    \item \textbf{Potenziale osmotico}: rappresenta l'energia associata alla concentrazione di soluti e alla tendenza dell'acqua a muoversi da aree con alto potenziale osmotico (bassa concentrazione di soluti) ad aree con basso potenziale osmotico (alta concentrazione di soluti), come le radici delle piante.
+\end{itemize}
+
+La relazione tra \ac{SWP} e \ac{SWC} è definita dal concetto di \ac{SWRC}, curva di ritenzione idrica del suolo: la quantità di acqua trattenuta nel suolo a diversi livelli di pressione\cite{assouline1998water}.
+
+Alcuni di questi parametri dipendono da fattori, come:
+\begin{itemize}[noitemsep]
+    \item \textbf{Proprietà fisiche del terreno}: caratteristiche del terreno come la tessitura (la percentuale di argilla, limo e sabbia) e la struttura (raggruppamento in composti porosi delle particelle del suolo) hanno peso nella stima di \ac{SWC}. In \cref{fig.soil-texture} si possono vedere delle classificazioni comuni per i tipi di terreni in base alla tessitura, mentre in \cref{fig.soil-structure} in base alla struttura. Infine, in \cref{fig.SWC-costants-in-different-soils} è possibile vedere come la tessitura altera il rapporto tra \ac{SWP} e \ac{SWC}.
+    \newpage
+    \item \textbf{Coltura}: l'apparato radicale di una pianta può influire sulle condizioni del suolo: l'assorbimento dell'acqua altera il bilancio idrico locale, la presenza di radici modifica della struttura del suolo, può avvenire la creazione di micro-canali che facilitano il movimento dell'acqua e infine il rilascio di sostanze organiche influenzano la tensione superficiale del suolo. In base a questi meccanismi l'apparato radicale ha un effetto sulla stima di \ac{SWP}\cite{XIAO2024167524}.
+\end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}[t]{0.5\textwidth}
+        \vfill
+        \includegraphics[width=\linewidth]{../figures/soil-structure.png}
+        \caption{Classificazione del suolo in base alla struttura: (A) granulare, (B) a blocchi, (C) prismatico e (D) massiccio\cite{RAI2017505}.}
+        \label{fig.soil-structure}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \vfill
+        \includegraphics[width=\linewidth]{../figures/SWC-costants-in-different-soils.png}
+        \caption{Relazione tra le soglie e la tessitura del terreno\cite{Ding2022}.}
+        \label{fig.SWC-costants-in-different-soils}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering\includegraphics[width=0.52\linewidth]{../figures/soil-texture.png}\caption{Classificazioni della distribuzione granulometrica del Dipartimento dell'Agricoltura degli Stati Uniti\cite{RAI2017505}.}\label{fig.soil-texture}
+\end{figure}
+\newpage
+
+È inoltre importante notare che sia l'apparato radicale che le proprietà fisiche del suolo non sono costanti all'interno dello stesso campo.
+
+Un ulteriore fattore da tenere in considerazione riguarda le variabili atmosferiche. Viene definita \textit{evapotraspirazione} il processo combinato attraverso il quale l'acqua viene trasferita nell'atmosfera, partendo da superfici d'acqua, dal ghiaccio, dal suolo e dalla vegetazione\cite{Kirkham2014}. Si tratta della combinazione tra \textit{evaporazione} e \textit{traspirazione}: la prima prevede il passaggio diretto dell'acqua nell'atmosfera e avviene per fattori come calore, umidità e velocità del vento; la seconda invece prevede il passaggio attraverso una pianta partendo dalle radici, fino a raggiungere le foglie, da dove avviene il passaggio all'atmosfera.
+
+Le stazioni meteorologiche\cite{Allen1998CropE} sono in grado di derivare, in un dato momento, il \textit{\ac{$ET_0$}}, coefficiente di evapotraspirazione potenziale, che rappresenta il valore di evapotraspirazione in un dato momento di un ipotetica cultura di prato erboso in condizioni ottimali dove l'unico fattore limitante è dato dal clima, offre quindi una rappresentazione dell'acqua ``persa'' e che non è più presente nel suolo. È possibile moltiplicare \ac{$ET_0$} per un \textit{\ac{$K_c$}}, coefficiente di coltura, che dipende dal tipo e dallo stato di crescita di una determinata coltura, per ottenere $ET_a$: reale evapotraspirazione.
+
+Questo permette quindi di approssimare la quantità di acqua evaporata in atmosfera e che quindi deve essere somministrata tramite irrigazione, a patto che sia presente in letteratura una stima adeguata di $K_c$, che non è però sempre disponibile. Inoltre, \ac{$ET_0$} viene calcolato su un area potenzialmente molto estesa e potrebbe quindi non essere adeguato per campi con zone ombreggiate.
+
+Per permettere agli agricoltori la raccolta e l'analisi di queste variabili, viene fatto uso di  tecnologie di agricoltura di precisione.
+
+\subsection{Agricoltura di precisione}\label{agricoltura-precisione-tipi}
+
+Consiste nell'uso di tecnologie avanzate per aumentare l'efficienza, la produzione e la qualità dei prodotti\cite{ZHANG2002113}.
+
+I primi esempi di agricoltura di precisione, per come viene intesa oggi, risalgono già agli anni '80, quando lo sviluppo di modelli di crescita delle colture e l'utilizzo del \ac{GPS} ha consentito di rilevare dati spaziali sui campi e monitorare variabili come la fertilità del suolo e le esigenze idriche[25].\cite{201402720190101}.
+Negli anni '90, l'introduzione di sensori per il monitoraggio delle variabili ha permesso agli agricoltori di adattare le loro pratiche in base alle esigenze specifiche di ciascuna area del campo\cite{201402720190101}.
+Oggi l'arrivo di nuove tecnologie come Cloud Computing, \ac{IoT} e intelligenza artificiale hanno portato un aumento sostanziale delle ricerche nel campo\cite{WOLFERT201769}.
+
+L'obbiettivo principale è quello di aumentare l'efficienza produttiva, per farlo si interessa di:
+\begin{itemize}[noitemsep]
+    \item \textbf{Migliorare qualità e resa delle culture}: grazie al monitoraggio continuo è possibile rilevare rapidamente problemi come malattie, carenze nutrizionali o idriche potendo così intervenire tempestivamente.
+    \item \textbf{Ridurre l'impatto ambientale}: ottimizzando l'utilizzo di risorse è possibile diminuire l'uso di acqua e di fertilizzanti, riducendo quindi l'impatto ambientale.
+    \item \textbf{Supportare la sostenibilità economica}: la riduzione del lavoro manuale richiesto agli agricoltori, grazie a tecnologie come i sistemi di monitoraggio automatico, insieme a un uso più efficiente delle risorse, ha un effetto positivo anche dal punto di vista economico. Inoltre, questo approccio rende le colture più resilienti alle variazioni climatiche, riducendo i costi di manutenzione in caso di eventi meteorologici estremi.
+\end{itemize}
+
+L'agricoltura di precisione si propone di agire in diverse aree dell'agricoltura, in base al contesto operativo, si può fare una divisioni nelle seguenti classi:
+\begin{itemize}[noitemsep]
+    \item \textbf{\ac{SSLM}}: un approccio all'agricoltura e alla gestione del territorio che adatta le decisioni e le pratiche alle caratteristiche uniche di specifiche aree all'interno dei campi. Invece di applicare tecniche uniformi su un intero campo o regione, la gestione sito-specifica utilizza informazioni dettagliate su suolo, clima, topografia e altri fattori ambientali per ottimizzare l'uso del terreno in ogni area. Si focalizza sull'ottimizzazione dell'uso del terreno \cite{SSLM}.
+    \newpage
+    \item \textbf{\ac{SSNM}}: si concentra sulla gestione mirata dei nutrienti necessari per le colture, come azoto, fosforo e potassio, adattandone l'applicazione alle condizioni specifiche di ogni parte del campo. L'obiettivo è migliorare l'efficienza d'uso dei fertilizzanti, riducendo gli sprechi e massimizzando la resa agricola, evitando allo stesso tempo danni ambientali legati all'eccesso di nutrienti \cite{SSNM}.
+    \item \textbf{Precision Irrigation}: un sistema che ottimizza l'irrigazione fornendo la giusta quantità d'acqua in base alle necessità specifiche di ogni area del campo. Utilizzando dati su umidità del suolo, clima e tipologia di coltura, l'irrigazione di precisione permette di ridurre il consumo idrico e migliorare l'efficienza idrica, garantendo che le colture ricevano esattamente l'acqua necessaria per crescere in modo ottimale \cite{ANJUM202385}.
+    \item \textbf{\ac{SSWM}}: un approccio che mira a gestire le infestanti in modo sito-specifico, applicando erbicidi o metodi di controllo solo nelle aree del campo dove le infestanti sono presenti o rappresentano una minaccia. Questo metodo riduce l'uso di prodotti chimici, minimizza l'impatto sull'ambiente e migliora l'efficacia delle pratiche di gestione delle infestanti \cite{SSWM}.
+    \item \textbf{\ac{SSCP}}: si riferisce alla gestione delle malattie delle colture in modo sito-specifico, basandosi su dati raccolti riguardo alla distribuzione e gravità delle malattie in diverse parti del campo. Attraverso il monitoraggio e la diagnosi precoce, consente di applicare trattamenti solo nelle aree affette, riducendo l'uso di pesticidi e migliorando la salute complessiva del raccolto \cite{SSCP}.
+\end{itemize}
+\newpage
+\section{Componenti chiave dell’agricoltura di precisione}
+\label{componenti-chiave}
+
+\subsection{Acquisizione dati}
+
+La raccolta dei dati è il fulcro dell'agricoltura di precisione: permette di avere un'immagine reale delle condizioni dei campi, sia per quanto riguarda il suolo che a livello atmosferico.
+Esistono diversi metodi utilizzati per raccogliere dati, tra questi Remote Sensing, sensori on-site e rilevazioni in laboratorio.
+
+\subsubsection{Remote Sensing}
+
+Il Remote Sensing (\textit{telerilevamento}) è il processo di rilevamento e monitoraggio delle caratteristiche fisiche di un'area, misurando la radiazione riflessa ed emessa a distanza, tipicamente tramite satelliti o velivoli\cite{USGS-REMOTE-SENSING}.
+L'analisi d'immagini ottiche e radar ad alta risoluzione, disponibili gratuitamente, viene utilizzata per monitorare i cambiamenti stagionali, la fenologia della vegetazione e le caratteristiche specifiche del territorio.
+
+In ambito agricolo, il Remote Sensing è particolarmente utile per rilevare dati sulle coltivazioni, come lo stato di salute delle piante e l'umidità del suolo \cite{FAO-REMOTE-SENSING}.
+Il \ac{GPS}, sistema di posizionamento globale, è un sistema di navigazione satellitare che fornisce informazioni sulla posizione, la velocità e l'orario in tempo reale in qualsiasi parte del mondo \cite{GPS-GOV}.
+
+Il \ac{GIS}, sistema d'informazioni geografico, un sistema informativo che consente la raccolta, l'organizzazione, l'analisi e la visualizzazione di dati geografici.
+
+Integrando tecnologie come \ac{GPS} e \ac{GIS}, il Remote Sensing consente di creare mappe dettagliate che incorporano dati geo spaziali su vari aspetti di un territorio, come l'uso del suolo, la topografia, la distribuzione di risorse. Consente di sovrapporre diversi strati di dati e di analizzare le relazioni spaziali tra di essi attraverso mappe interattive. Il GIS può gestire grandi volumi di dati geografici, facilitando il monitoraggio e la pianificazione del territorio \cite{GIS-ESRI}.
+
+\subsubsection{Sensori on-site}
+
+Un ambito di ricerca molto attivo riguarda lo sviluppo di sensori in grado di monitorare in tempo reale le variabili delle coltivazioni, tenendo conto delle limitazioni legate all'uso in contesti agricoli: la rete internet potrebbe non coprire totalmente o parzialmente i campi estesi, e il consumo energetico deve essere ridotto a causa della scarsa disponibilità della rete elettrica, rendendo necessario l'uso di batterie, la cui durata deve essere massimizzata\cite{s24082647}.
+
+Sono spesso utilizzate tecnologie di comunicazione wireless a lungo raggio, in particolare opzioni \ac{LPWA} come LoRa, NB-IoT e Sigfox, che sono emerse come alternative alle reti cellulari tradizionali\cite{bhoyar2019communication}.
+Le tecnologie LPWA sono caratterizzate da una bassa velocità di trasmissione dati, compensata però da un basso consumo energetico e un'ampia copertura. Le tecnologie LPWA eccellono nel collegare dispositivi che richiedono una trasmissione minima di dati su lunghe distanze con una lunga durata della batteria\cite{dai2019low}.
+
+Aspetto fondamentale riguarda i sensori del suolo: sono in grado di misurare proprietà essenziali del suolo come il contenuto di umidità, la presenza e la quantità di nutrienti, la temperatura e il PH. Sono usati per orientare con precisione le pratiche d'irrigazione e fertilizzazione, evitando l'uso eccessivo di risorse e garantendo una disponibilità ottimale di nutrienti per le colture \cite{vuran2018internet}.
+
+Sono inoltre disponibili sensori di qualità dell'acqua che sono in grado di monitorare aspetti come salinità, livelli di ossigeno disciolto e torbidità. Questi sensori svolgono un ruolo essenziale nel preservare l'idoneità dell'acqua d'irrigazione per la coltivazione e nel proteggere dal deterioramento del suolo causato da un eccesso di sali o contaminanti \cite{garcia2020iot}.
+
+Alcuni sensori sofisticati sono in grado d'identificare l'esistenza di parassiti e malattie nelle colture. Utilizzano metodi come il riconoscimento delle immagini, la spettroscopia o altre tecniche per individuare la presenza di agenti patogeni o parassiti, consentendo un'azione rapida per mitigare i danni potenziali\cite{che2022mobile}.
+
+Un componente fondamentale per l'acquisizione di dati in agricoltura di precisione è rappresentato dall'introduzione sul mercato di piattaforme hardware dotate di micro-controllori, come Arduino, ESP32 e altre soluzioni simili. Questi dispositivi vengono utilizzati per la lettura dei dati rilevati dai sensori e l'invio di suddetti dati a server esterni. Permettono di ridurre l'utilizzo di risorse e il costo del sistema, pur avendo un'elevata semplicità di programmazione. Possono essere programmati per agire da attuatori, per esempio per attivare automaticamente sistemi d'irrigazione\cite{iot4030012, su16010306}.
+
+\subsubsection{Rilevazioni in laboratorio}
+
+Le tecniche di misurazione in laboratorio possono essere utili per la raccolta di dati iniziali accurati e affidabili sulle caratteristiche del suolo/delle piante. Tra le tecniche più comuni si trovano:
+\begin{itemize}[noitemsep]
+    \item Determinazione della densità apparente del suolo: prevede il prelievo di campioni di suolo mediante una trivella cilindrica, seguita dalla pesatura del campione umido e dall'essiccazione a 105°C per calcolare la densità apparente\cite{BULK-DENSITY}.
+    \item Analisi della granulometria: consente di determinare la distribuzione delle dimensioni delle particelle del suolo, utilizzando metodi come la setacciatura e la sedimentazione. I risultati forniscono informazioni sulla capacità di ritenzione idrica e sull'aerazione del suolo\cite{GRANUMETRIC-ANALYSIS}.
+    \item Determinazione del pH del suolo: il pH è un parametro cruciale che influisce sulla disponibilità dei nutrienti. La misurazione può essere effettuata in laboratorio mediante l'uso di un pH-metro su un campione di suolo mescolato con acqua distillata\cite{PH-SOIL}.
+    \item Analisi della materia organica: la quantità di materia organica nel suolo è essenziale per la fertilità. Le tecniche di analisi includono l'uso di metodi chimici, come la combustione, per determinare il contenuto di carbonio organico\cite{ORGANIC-SOIL}.
+    \item Test di capacità di ritenzione idrica: misura la quantità di acqua che un campione di suolo può trattenere dopo la saturazione. È utile per comprendere la gestione dell'irrigazione e la sostenibilità delle colture\cite{WATER-RETENTION-LAB}.
+\end{itemize}
+
+In generale sono misurazioni che richiedono tempo e un elevato costo in termini di strumentazioni, per questo motivo vengono effettuate saltuariamente.
+
+\subsection{Simulazione del terreno}
+
+Un altro componente chiave è rappresentato dai \ac{CSM}, modelli di simulazione delle colture, sono strumenti che simulano la crescita delle colture utilizzando equazioni biofisiche\cite{KELLY2023107986}.
+Esistono diversi \ac{CSM}, ognuno progettato per differenti casi d'uso.
+Possono essere utilizzati per applicazioni di ricerca o per la gestione delle colture. Nel ramo della ricerca vengono usati come strumento per aggregare le conoscenze o per integrare sperimentazioni sul campo, tipicamente molto costose. Un'altra applicazione dei modelli è quella di dimostrare l'impatto delle pratiche di gestione su una coltura o sull'ambiente agli agricoltori\cite{MATTHEWS201324}. Per esempio in \cite{Mereu2015} si fa uso di \ac{CSM} per valutare l'impatto climatico sulla produzione in diverse zone, considerando molteplici combinazioni di suoli e condizioni climatiche, varietà e gestione delle colture
+
+I parametri dei modelli vengono generalmente tarati confrontandoli con i dati osservati sul campo, attraverso un processo iterativo di regolazione; Questo porta i valori stimati dei parametri a essere imprecisi a causa degli errori sperimentali intrinseci associati all'osservazione sul campo\cite{LI2012219}.
+
+\subsection{Sistemi di supporto alle decisioni}
+
+Infine, i \ac{DSS}, sistema di supporto alle decisioni, coprono un ruolo importante nell'agricoltura di precisione. Sono un sistema informativo in grado di supportare le attività decisionali fornendo raccomandazioni. Un \ac{DSS} efficace è un pacchetto software interattivo in grado di assistere agricoltori, consulenti o amministratori nel prendere decisioni che richiedono la sintesi di numerosi e diversi dati. In genere, i DSS incorporano uno o più modelli di simulazione che consentono di preparare raccomandazioni che tengono conto di fattori specifici della coltura e del luogo, come il clima, le date di semina, i tipi di terreno, le caratteristiche del sistema d'irrigazione. Tra i sistemi per l'acquisizione dei dati, possono esserci collegamenti con servizi web specifici (ad esempio immagini satellitari, dati climatici in tempo reale, ecc.) e sensori che forniscono dati in tempo reale \cite{GALLARDO2020106209}.
+\newpage
+
+\section{Irrigazione di precisione}
+\label{irrigazione-di-precisione}
+% Definizione, breve related (presa dal paper in allegato), perchè è importante.
+
+Questo documento ha interesse a mostrare un esempio di sistema d'irrigazione automatico su piccola scala, ricade quindi nella branca del Precision Irrigation, già definita nella \cref{agricoltura-precisione-tipi}.
+Possono essere identificate alcune caratteristiche che un sistema d'irrigazione di precisione dovrebbe avere:
+\begin{itemize}
+    \item \textbf{Scopo generale}, un sistema d'irrigazione intelligente di valore deve essere in grado di ottenere risultati ottimali su colture e suoli diversi.
+    \item \textbf{Stabilità}, I sistemi d'irrigazione intelligenti devono garantire prestazioni costanti e affidabili, mantenendo i livelli di umidità del suolo il più vicino possibile all'obiettivo desiderato. La stabilità in questi sistemi è essenziale per evitare oscillazioni che potrebbero compromettere la crescita delle piante.
+    \item \textbf{Reattività}, il sistema deve essere in grado di adattarsi rapidamente e ritrovare il proprio stato di stabilità di fronte a eventi capaci di modificare significativamente lo stato del sistema, come eventi atmosferici estremi.
+    \item \textbf{Robustezza}, è fondamentale prevedere la ridondanza dei sensori e procedure automatiche per rilevare e mitigare anomalie e malfunzionamenti.
+    \item \textbf{Semplicità} mantenere il sistema semplice è cruciale per semplificare l'implementazione, la regolazione e la manutenzione del sistema, ma anche per migliorarne l'affidabilità e la trasparenza complessiva.
+\end{itemize}
+
+Nella \cref{approcci-misurazione} sono introdotti quali sono gli approcci adottati per la raccolta dei dati, mentre nella \cref{approcci-irrigazione} si introducono i principali approcci per il calcolo del consiglio irriguo.
+
+% Qua serebbe carino mettere le 5 caratteristiche che ha scritto il brother, solo che non voglio copia incollare, non posso citarlo essendo non pubblicato.
+
+\subsection{Approcci di misurazione}\label{approcci-misurazione}
+
+Tra i sensori descritti in \cref{componenti-chiave}, quelli utilizzati in questo contesto possono essere sia sensori on-site che remoti.
+I primi sono tipicamente posizionati sotto il terreno in modo da monitorare l'umidità del suolo, offrendo misurazioni precise.
+Gli ultimi invece vengono utilizzati per raccogliere valori a livello globale e sono di natura meno precisi.
+In \cite{Babaeian2021} viene presentato un sistema che fa utilizzo di entrambe le tipologie di sensori, ma tipicamente è un approccio non utilizzato a causa dell'elevato costo.
+
+I sistemi che fanno uso di sensori on-site possono essere classificati in base alla quantità di sensori posizionati per pianta. L'installazione più utilizzata, in quanto più economica, è quella a sensore singolo. Questa però pecca dell'impossibilità di monitorare l'umidità a diverse profondità\cite{Arif2013}.
+I sistemi multi-sensore sono in grado di creare griglie multi-dimensionali.
+La disposizione più utilizzata è quella di griglie monodimensionali, dove i sensori sono allineati verticalmente a diverse profondità sotto a ogni pianta\cite{Karandish2016, Goldstein2017, Jimnez2020}.
+Le griglie bidimensionali\cite{Egea2016, Cordeiro2016} prevedono l'installazione di più sensori per ogni strato, formando una matrice che descrive un'intera fetta di terreno.
+Le installazioni a griglia tridimensionale\cite{ZapataSierra2021, Liang2021}  possono essere viste come la visualizzazione di più fette di terreno.
+Questi ultimi due tipi d'installazione sono meno utilizzati a causa del maggior costo. In \cref{fig.griglie} sono mostrate le tre disposizioni multi-sensore.
+\newpage
+\begin{figure}[t]
+    \centering\includegraphics[width=0.7\linewidth]{../figures/griglie.png}\caption{In ordine, un esempio d'installazione monodimensionale, bidimensionali e tridimensionale\cite{FRANCIA2022106924}.}\label{fig.griglie}
+\end{figure}
+
+\subsection{Approcci al calcolo del consiglio irriguo}\label{approcci-irrigazione}
+
+Contrariamente alla \cref{approcci-misurazione}, che si poneva l'obiettivo di descrivere approcci alla misurazione, questa sezione ha come obiettivo quello di descrivere alcuni approcci all'irrigazione: ogni approccio utilizza in modo diverso i dati raccolti nei diversi approcci di misurazione, con l'obiettivo ultimo di somministrare la corretta quantità di acqua.
+
+\subsubsection{Approcci basati su teoria dei controlli}
+
+L'approccio più semplice è rappresentato da sistemi basati su soglie, dove l'irrigazione viene fornita quando la misura dell'umidità del terreno è al di sotto di una determinata soglia.
+Questo genere di approcci soffre dell'inabilità di determinare il corretto volume di acqua necessaria al terreno, rendendoli adatti solo in ambienti controllati con poche variabili\cite{Zhao2023}.
+
+Un altro approccio può essere trovato nell'utilizzo della teoria dei controlli per gestire ambienti dinamici. Il loro utilizzo in campo aperto è scoraggiato dalla quantità di variabili incontrollabili.
+Un esempio particolarmente importante riguarda l'utilizzo di controllori di tipo \ac{PID}, soluzione già ampiamente diffusa in altri ambiti\cite{Astrom1995}.
+\cite{Goodchild2015} propone un sistema basato su un PID che permette di modellare, oltre all'umidità del terreno in input, le precipitazioni cadute. \cite{Lozoya2016} propone l'utilizzo di un \ac{MPC}, che secondo lo studio ha permesso un risparmio nel quantitativo di acqua utilizzato, mantenendo l'umidità all'interno di un intervallo ideale.
+
+\subsubsection{Approcci basati sull'apprendimento automatico}
+
+Esistono approcci basati sull'apprendimento autonomo che sfruttando la diffusione dei dispositivi IoT per raccogliere grandi quantità di dati attraverso i quali addestrare modelli di \textit{machine learning}: dalla classificazione\cite{Gloria2021}, alla regressione\cite{Navarro2016}, fino a sistemi più complessi che coinvolgono le reti neurali\cite{Gong2022} e il \textit{deep reinforcement learning}\cite{Chen2021}.
+
+Il problema principale in questo genere di approcci si trova nel rischio di over-fitting del modello: dati non sufficientemente eterogenei portano i modelli a essere addestrati per gestire culture specifiche, in uno stato di vita specifico, in specifiche condizioni del suolo e atmosferiche.
+La raccolta di dati di alta qualità è quindi un processo costoso sia in termini economici che di tempo, soprattutto considerando che la raccolta dei dati è possibile solo durante le stagioni d'irrigazione.
+
+In \cite{Gonzalez2019} è proposto un modello di predizione basato su reti neurali applicabile in contesti in cui la quantità di dati a disposizione è considerata limitata, ma la procedura di addestramento utilizza dati storici inerenti due anni solari di coltivazione, quantità superiore a quella spesso disponibile, generando quindi un problema di \textit{cold-start}: prima di avere un sistema d'irrigazione in funzione, è necessaria la disponibilità di una grande quantità di dati raccolti per l'addestramento dei modelli prima di poterli utilizzare.
+
+Lo studio \cite{Alibaei2022} mostra un modello \textit{Deep Reinforcement Leasing} applicato in un campo di pomodori in Portogallo, il cui obiettivo è quello di massimizzare il guadagno rapportato alla quantità d'acqua utilizzata per la coltura.  Gli autori di \cite{García2020, Emmanuel2022} descrivono lo stato dell'arte in termini di sistemi d'irrigazione intelligente.
+Gli autori di \cite{Goldstein2017} confrontano tecniche di classificazione e di regressione mostrando che in ambi gli approcci i risultati sono stati corretti, rispetto alle scelte che avrebbe fatto un agronomo, con un accuratezza maggiore del 93\%. Gli autori di \cite{Sidhu2020} fanno riferimento solamente all'utilizzo di repressori, considerati più adatti visto il range continuo dell'output da determinare, portando a risultati con accuratezza del 71\% rispetto ad altri modelli, inoltre enfatizza l'importanza di una corretta modellazione e parametrizzazione del suolo. Gli autori di \cite{Emami2022} propongono un esempio di applicazione di un sistema d'irrigazione intelligente su vasta scala utilizzando un \textit{Gaussian Process Regression Model}.
+
+In questo documento è stato deciso di produrre un simulatore con un sistema basato su un \ac{PID}.
+% \newpage
+% \chapter{Tecnologie utilizzate}
+
+% % %Descrive appunto le tecnologie utilizzate nel progetto: sia lato HW (Arduino + Raspberry + sensori), sia lato SW (stack tecnologico). Lunghezza 5-8 pagine.
+
+% Il lavoro che questo documento descrive riguarda lo sviluppo di una soluzione d'irrigazione intelligente. In questo contesto, le tecnologie utilizzate sono state numerose, sono state divise in tecnologie hardware e software.
+
+% \section{Hardware}
+
+% \begin{itemize}[noitemsep]
+%     \item \textbf{Sensori}, TODO modello
+%     \item \textbf{Whimar Riser Pump 2000}, pompa sommergibile con portata regolabile per l'utilizzo in acquario, filtri, fontane e piccoli laghetti decorativi. Dotato di porta-gomma che consentono l'utilizzo con tubi di vario diametro e supporto con ventose che consentono l'installazione in massima sicurezza.
+%     \item \textbf{Arduino UNO R3} è una scheda basata sul micro-controllore ATmega328P. È in grado di elaborare programmi scritti in linguaggio C++ usando un'architettura SuperLoop: un unico segmento di codice viene ripetuto fin tanto che il dispositivo riceve alimentazione. Questo loop è interrompibile momentaneamente solo tramite degli interrupt di sistema. Le routine di gestione degli interrupt non sono interrompibili, il che implica che durante la loro esecuzione non è possibile gestire eventuali altri interrupt. È quindi consigliabile suddette routine siano particolarmente brevi: oltre che essere indispensabile per diminuire la possibilità di perdita di eventi, molte librerie di sistema sfruttano internamente gli interrupt, per esempio \texttt{delay} (equivalente a \texttt{sleep} di Python).
+%     Questo Arduino offre l'utilizzo di un totale di ventidue pin \ac{GPIO}: 16 dei quali utilizzabili sia come input che output digitali e sei utilizzabili solo come input analogici. Può inoltre gestire una comunicazione seriale tramite USB con la quale è possibile comunicare con altri dispositivi come un computer.
+%     Esistono diversi altri modelli, ma per semplicità nel corso del documento questo specifico modello verrà chiamato ``Arduino''.
+%     \item \textbf{Raspberry Pi 4 model B} è un \ac{SBC} in grado di utilizzare sistemi operativi basati su kernel Linux o su RISC OS. Presenta un processore quad-core ARM a 64bit a una velocità di clock di 1.80GHz. La configurazione utilizzata presenta 4 GB di RAM LPDDR4-3200. Compatibile con Bluetooth 5.0, BLE, connessioni wireless IEEE 802.11ac a 2.4 GHz e 5.0 GHz, oltre che Gigabit Ethernet. Permette anche l'utilizzo di 40 pin GPIO digitali. Compatibile con periferiche USB tramite due porte USB2.0 e 2 porte USB3.0. L'uscita video è permessa da tramite due porte Micro-HDMI, che supportano doppio schermo 4k. Come storage viene utilizzata una singola scheda microSD. Include un'interfaccia MIPI DSI per display e MIPI CSI per telecamere, ed è alimentato tramite un connettore USB-C da 5V/3A. Prodotto dalla Raspberry Pi Foundation, che ha realizzato diversi modelli per varie esigenze, è compatibile con vari sistemi operativi, tra cui il più noto è Raspberry Pi OS (precedentemente chiamato Raspbian), una versione di Debian sviluppata dalla stessa fondazione. Anche in questo caso, si farà riferimento a ``Raspberry'' per intendere questo specifico modello.
+% \end{itemize}
+
+% \section{Software}
+
+% Questo progetto comprende lo sviluppo di tre diversi software:
+% \begin{enumerate}
+%     \item Frontend: interfaccia web.
+%     \item Backend: software per la gestione delle logiche d'irrigazione, elaborazione dati dei sensori e offerta dati per l'interfaccia.
+%     \item Su Arduino: software per la gestione di sensori e pompa.
+% \end{enumerate}
+% Il \cref{capitolo-3} va più in dettaglio riguardo la struttura del progetto.
+
+% \subsection{Front-end}
+% \begin{itemize}[noitemsep]
+%     \item \textbf{\ac{JS}} è un linguaggio di programmazione interpretato, usato principalmente per la programmazione web sia a livello del client, è infatti compatibile con tutti i browser attualmente utilizzati, che server, per esempio tramite di Node.js. È un linguaggio dinamico, basato sui prototipi, multi-paradigma, single-threaded, che supporta stili di programmazione orientati agli oggetti, imperativi e dichiarativi. Standardizzato come ECMAScript, \ac{JS} è alla base di un grande ecosistema di librerie e framework che ne aumentano le capacità e l'applicabilità in diversi contesti.
+%     \begin{itemize}[noitemsep]
+%         \item \textbf{Chart.js} è una libreria \ac{JS} semplice e flessibile per la generazione di grafici lato frontend. Si tratta di un progetto Open Source che sfrutta i canvas di HTML5. Di default permette l'utilizzo di otto diversi tipi di grafici, è compatibile con plug-in che permettono l'aggiunta di nuove funzionalità.
+%         \begin{itemize}[noitemsep]
+%             \item \textbf{chartjs-chart-matrix} è un plug-in che permette la creazione di grafici a matrice, un esempio è in \cref{fig.matrix_chart_example}.
+%             \begin{figure}
+%                 \centering
+%                 \includegraphics[width=0.9\linewidth]{../figures/matrix-chart-example.png}
+%                 \caption{Esempio di una mappa delle temperature medie giornaliere in base al mese, l'intensità del colore è proporzionale alla temperatura.}
+%                 \label{fig.matrix_chart_example}
+%             \end{figure}
+%             \item \textbf{chartjs-plugin-streaming} è un plug-in che permette la creazione di grafici con valori in tempo reale. Prevede lo scorrimento verso sinistra del grafico in base al tempo. È possibile configurarlo per modificare la granularità, la frequenza di aggiornamento e un eventuale delay in modo da avere una visualizzazione ``fluida'' dei nuovi dati. Necessita di un adapter per una libreria per la gestione delle date e ricezione del tempo attuale, come Luxon.
+%             \item \textbf{chartjs-plugin-datalabels} è un plug-in per la visualizzazione dei dati su un grafico, un esempio su un grafico a linea è visibile in \cref{fig.datalabels-example}.
+%             \begin{figure}
+%                 \centering
+%                 \includegraphics[width=0.9\linewidth]{../figures/datalabels-example.png}
+%                 \caption{Esempio utilizzo di datalabels dove in ogni linea la posizione del label è differente.}
+%                 \label{fig.datalabels-example}
+%             \end{figure}
+%             \item \textbf{chartjs-adapter-luxon} è un plug-in che si occupa di fornire a chartjs-plugin-streaming le informazioni sulle date da Luxon.
+%         \end{itemize}
+%         \item \textbf{Luxon} è un wrapper di date e tempi per \ac{JS}. Utilizza un'API per gestione le date, che consente il supporto agli intervalli, alle durate (14 days, 5 minutes, 33 seconds), la loro conversione e parsing. Offre la localizzazione delle stringhe con una gestione interna delle time-zones.
+%         \item \textbf{bootstrap} è un toolkit frontend potente ed estendibile. Permette la creazione d'interfacce web utilizzando unicamente classi HTML, senza la necessità di scrivere il proprio foglio di stile CSS.
+%         \item \textbf{jQuery} è una famosa libreria per la manipolazione e navigazione di documenti HTML, la gestione degli eventi, le animazioni e richieste HTTP.
+%     \end{itemize}
+% \end{itemize}
+
+% \subsection{Backend}
+% \begin{itemize}
+%     \item \textbf{Python} è un linguaggio di programmazione ad alto livello che supporta il paradigma object-oriented, la programmazione strutturata e molte caratteristiche di programmazione funzionale. È un linguaggio debolmente tipizzato, che utilizza unicamente l'indentazione per la definizione dei blocchi di codice, al contrario di molti linguaggi, non prevede quindi l'utilizzo di parentesi graffe. Supporta l'overloading di operatori e funzioni tramite delegati, oltre che sintassi avanzate quali slicing (l'utilizzo di un certo range di elementi in una lista) e list comprehension (la creazione di nuove liste partendo da una originale). Il codice Python viene interpretato (con delle compilazioni a bytecode alla prima esecuzione per migliorare le performance) e supporta un uso interattivo.
+%     \begin{itemize}[noitemsep]
+%         \item \textbf{Flask} è un framework web per la creazione di backend per Python.
+%         \item \textbf{NumPy} è la libreria principale per il calcolo scientifico Python. Permette la gestione di array $n$-dimensionali ed è ampiamente utilizzato per operazioni di algebra lineare, trasformate di Fourier, manipolazioni di dati e altre applicazioni numeriche. È uno strumento essenziale per chi lavora con analisi numeriche, machine learning e data science.
+%         \item \textbf{pySerial} è una libreria per l'accesso a porte seriali. Permette la stessa gestione delle porte seriali su ogni piattaforma. Supporta diversi byte size, bit di parità e di fine messaggio, oltre che controllo del flusso. La porta è configurata per la trasmissione binaria.
+%         \item \textbf{SciPy} è una libreria di Python per il calcolo scientifico e tecnico, espande NumPy. Offre un'ampia quantità di funzionalità per l'ottimizzazione, la statistica, l'integrazione, l'algebra lineare, l'elaborazione dei segnali, la gestione d'immagini e altre operazioni matematiche avanzate. È molto utilizzata per esempio nei campi della fisica, dell'ingegneria, della biologia computazionale.
+%         \item \textbf{sqlite3} è una libreria che permette l'utilizzo di un database su disco locale senza necessità di utilizzo di un server separato.
+%     \end{itemize}
+% \end{itemize}
+
+% \subsection{Su Arduino}
+% \begin{itemize}
+%     \item \textbf{C++} è un linguaggio di programmazione nato come espansione del linguaggio C, presenta caratteristiche di programmazione funzionale, generica e orientata agli oggetti, permettendo però una gestione a basso livello della memoria. Per quest'ultima caratteristica è tipicamente utilizzato in contesti dove le prestazioni sono particolarmente importanti come lo sviluppo di sistemi operativi, software embedded, motori di gioco e applicazioni real-time. Questo caso viene utilizzato per lo sviluppo di software per dispositivi con risorse limitate, come micro-controllori e sistemi embedded, dove la gestione diretta della memoria e delle risorse hardware è essenziale.
+%     \begin{itemize}[noitemsep]
+%         \item \textbf{Arduino API} è una libreria in C/C++ per la scrittura di codice per dispositivi Arduino. Contiene funzioni riguardanti l'hardware, per esempio, contiene funzioni per la lettura/scrittura di segnali digitali e analogici sui pin, per la gestione degli interrupt e della porta seriale. Oltre alle funzioni hardware, l'API include, ad esempio, strumenti per la gestione dei timer, funzioni matematiche, funzioni per la gestione di bit e byte e per la gestione degli stream. Contiene inoltre i tipi di variabile `enum`, `String` e funzioni per la conversione.
+%         \item \textbf{TimerInterrupt} è una libreria che permette l'utilizzo del timer fisico di una board Arduino come interrupt di sistema, permettendo lo svolgimento ininterrotto di ruotine periodicamente.
+%         \item \textbf{ArduinoJson} è una semplice libreria per la gestione di stringhe JSON su piattaforma Arduino. Permette serializzazione e deserializzazione, ed è quindi molto utile per mandare dati strutturati sul seriale in modo che venga che lo scambio dei dati sia standardizzato.
+%     \end{itemize}
+% \end{itemize}
+
+% \chapter{Un prototipo d'irrigazione prescrittivo}\label{capitolo-3}
+% Descrive nel dettaglio il tuo lavoro, quindi come le tecnologie presentate nella precedente sezione sono state utilizzate nel progetto. Puoi prenderla larga descrivendo il nostro sistema (quello che ti ho mostrato sul mio pc) per poi descrivere la necessità di averne una rappresentazione su piccola scala e come è stata realizzata, così come descrivere il ciclo di vita del dato (collection, processing, exploitation). Ora come ora è normale tu non abbia chiare le idee su questo capitolo, andando avanti integreremo le tue conoscenze con quelle pregresse nostre sul dominio applicativo e sul nostro sistema. Questo capitolo deve essere il core della tesi, lunghezza 20 pagine.
+
+% \chapter{Conclusioni e sviluppi futuri}
+
+% Breve capitolo che trae le conclusioni sul lavoro svolto, il risultato ottenuto rispetto a quello atteso e lo spazio dedicato a migliorie future.
+
+%
+% BIBLIOGRAPHY
+%
+
+\backmatter
+
+\bibliographystyle{unsrt}
+\bibliography{../bib/bibliography}
+
+
+\begin{acknowledgements} % this is optional
+    Optional. Max 1 page.
+\end{acknowledgements}
+
+\end{document}
