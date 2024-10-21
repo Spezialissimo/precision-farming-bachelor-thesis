@@ -502,7 +502,8 @@ Analisi
     Requisiti (spiegare cosa l’applicazione dovrà fare: requisiti funzionali e non funzionali)
 Design
     Architettura divisa per ogni software (Per esempio spiegare che è una comunicazione tre 3 software attraverso diversi protocolli ecc. + architettura a microservizi del beckend + UML)
-
+Valutazione
+    mostrare che il controllore + matrici funzionano
 
 
 Temi da toccare e capire dove vanno messi:
